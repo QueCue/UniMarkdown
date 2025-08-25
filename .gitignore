@@ -1,0 +1,57 @@
+# Unity .gitignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Unity generated
+Library/
+Temp/
+Obj/
+obj/
+Build/
+Builds/
+Logs/
+UserSettings/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.csproj
+*.sln
+*.suo
+*.user
+*.unityproj
+*.pidb
+*.booproj
+*.svd
+*.userprefs
+
+# Unity cache
+MemoryCaptures/
+Recordings/
+
+# Package cache
+
+# Platform-specific
+*.apk
+*.aab
+*.ipa
+*.app
+
+# Crash/Reports
+sysinfo.txt
+
+# Asset pipeline
+Assets/AssetStoreTools*
+
+# Addressables
+Assets/AddressableAssetsData/*/*.bin*
+Assets/AddressableAssetsData/link.xml
+
+# TextMesh Pro auto-generated
+Assets/TextMesh Pro/*/Resources/*
+
+# Ignore local test outputs
+Tests/**/bin/
+Tests/**/obj/
