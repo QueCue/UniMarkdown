@@ -61,8 +61,8 @@
 -   Option B — Unity Package Manager (UPM):
     1. Open Unity → Window → Package Manager
     2. Click the + button → "Add package from git URL..."
-    3. Use: `https://github.com/QueCue/UniMarkdown.git?path=src#v0.1.0` (replace tag with the version you want)
-       - Or main branch: `https://github.com/QueCue/UniMarkdown.git?path=src`
+    3. Use: `https://github.com/QueCue/UniMarkdown.git?path=src` (follow the main branch)
+    Upgrade: select the package in Package Manager and click "Update" to get the latest commit
 -   Open Markdown:
     -   Select a `.md` asset to render in the Inspector via `MarkdownInspector`.
     -   Or open the Markdown viewer window (if provided) from the Unity menu.

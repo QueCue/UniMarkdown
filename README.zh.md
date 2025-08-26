@@ -64,8 +64,9 @@
 -   方式 B — 通过 Unity Package Manager (UPM)：
     1. 打开 Unity → Window → Package Manager
     2. 点击 + → "Add package from git URL..."
-    3. 输入：`https://github.com/QueCue/UniMarkdown.git?path=src#v0.1.0`（固定版本，可将标签替换为目标版本）
-       - 跟随 main 分支：`https://github.com/QueCue/UniMarkdown.git?path=src`
+    3. 输入：`https://github.com/QueCue/UniMarkdown.git?path=src`（跟随 main 分支）
+
+    升级：在 Package Manager 选中该包并点击“Update”即可获取最新提交。
 
 -   打开 Markdown：
     - 在 Project 视图选中任意 `.md` 资源，可在 Inspector 中通过 `MarkdownInspector` 渲染。
