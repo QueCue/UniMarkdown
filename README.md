@@ -1,3 +1,5 @@
+![UniMarkdown Banner](https://capsule-render.vercel.app/api?type=waving&color=gradient&height=120&text=UniMarkdown&fontAlign=50&fontAlignY=35&fontSize=40&animation=fadeIn)
+
 # UniMarkdown
 [![Unity](https://img.shields.io/badge/Unity-2021.3%2B-555555?logo=unity&logoColor=white)](ProjectSettings/ProjectVersion.txt)
 [![Platform](https://img.shields.io/badge/Editor-Extension-2e7d32)](#)
