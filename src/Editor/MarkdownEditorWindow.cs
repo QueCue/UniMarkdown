@@ -1,0 +1,433 @@
+using System;
+using System.IO;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
+
+namespace UniMarkdown.Editor
+{
+    /// <summary>
+    /// Markdown编辑器窗口，提供Markdown文件的加载、预览和编辑功能
+    /// </summary>
+    public sealed class MarkdownEditorWindow : EditorWindow
+    {
+        private const string g_windowTitle = "Markdown 编辑器";
+        private const string g_defaultFilePath = "Assets/StreamingAssets/Examples/sample.md";
+
+        [SerializeField]
+        private string m_currentFilePath;
+
+        [SerializeField]
+        private Vector2 m_viewScrollPosition;
+
+        // GUI相关
+        private bool m_isEditMode;
+
+        // Markdown渲染器 - 通用渲染组件
+        private MarkdownRenderer m_markdownRenderer;
+        private string m_markdownContent;
+        private Vector2 m_editScrollPosition;
+
+        /// <summary>
+        /// 窗口初始化
+        /// </summary>
+        private void OnEnable()
+        {
+            titleContent = new GUIContent(g_windowTitle);
+            m_markdownRenderer = new MarkdownRenderer();
+
+            // 设置渲染器的重绘回调
+            m_markdownRenderer.SetRepaintCallback(Repaint);
+
+            // 自动加载示例文件
+            if (!File.Exists(m_currentFilePath))
+            {
+                m_currentFilePath = g_defaultFilePath;
+            }
+
+            if (File.Exists(m_currentFilePath))
+            {
+                LoadMarkdownFile(m_currentFilePath);
+            }
+
+            EditorApplication.playModeStateChanged -= PlayModeStateChanged;
+            EditorApplication.playModeStateChanged += PlayModeStateChanged;
+        }
+
+        /// <summary>
+        /// 窗口销毁时清理资源
+        /// </summary>
+        private void OnDisable()
+        {
+            // 渲染器内部会处理元素清理
+            m_markdownRenderer?.Dispose();
+            m_markdownRenderer = null;
+            EditorApplication.playModeStateChanged -= PlayModeStateChanged;
+        }
+
+        /// <summary>
+        /// 绘制GUI
+        /// </summary>
+        private void OnGUI()
+        {
+            EditorGUI.DrawRect(new Rect(0, 0, position.width, position.height),
+                MarkdownStyleManager.Inst.BackgroundColor);
+
+            DrawToolbar();
+
+            EditorGUILayout.Space();
+
+            if (m_isEditMode)
+            {
+                DrawEditMode();
+            }
+            else
+            {
+                DrawPreviewMode();
+            }
+        }
+
+        /// <summary>
+        /// 当窗口获得焦点时的处理
+        /// </summary>
+        private void OnFocus()
+        {
+            // 检查文件是否被外部修改
+            if (!string.IsNullOrEmpty(m_currentFilePath) &&
+                File.Exists(m_currentFilePath))
+            {
+                string fileContent = File.ReadAllText(m_currentFilePath);
+                if (fileContent != m_markdownContent)
+                {
+                    if (EditorUtility.DisplayDialog("文件已修改", "检测到文件被外部修改，是否重新加载？", "重新加载", "保持当前内容"))
+                    {
+                        m_markdownContent = fileContent;
+                        // MarkdownRenderer会自动检测内容变化并重新解析
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 显示窗口的菜单项
+        /// </summary>
+        [MenuItem("Tools/Markdown编辑器/打开Markdown编辑器")]
+        public static void ShowWindow()
+        {
+            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
+            //window.minSize = new Vector2(600, 400);
+            window.Show();
+        }
+
+        /// <summary>
+        /// 打开指定的Markdown文件
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        public static void OpenMarkdownFile(string filePath)
+        {
+            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
+            window.LoadMarkdownFile(filePath);
+            window.Show();
+            window.Focus();
+        }
+
+        /// <summary>
+        /// 加载示例文件的菜单项
+        /// </summary>
+        [MenuItem("Tools/Markdown编辑器/加载示例文件")]
+        public static void LoadSampleFile()
+        {
+            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
+            window.LoadMarkdownFile(g_defaultFilePath);
+            window.Show();
+        }
+
+        /// <summary>
+        /// 加载C#语法高亮测试文件的菜单项
+        /// </summary>
+        [MenuItem("Tools/Markdown编辑器/测试C#语法高亮")]
+        public static void LoadCSharpSyntaxTest()
+        {
+            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
+            var testFilePath = "Assets/StreamingAssets/Examples/csharp_sample.md";
+            window.LoadMarkdownFile(testFilePath);
+            window.Show();
+        }
+
+        /// <summary>
+        /// 加载C#语法高亮测试文件的菜单项
+        /// </summary>
+        [MenuItem("Tools/Markdown编辑器/测试C#语法高亮2")]
+        public static void LoadCSharpSyntaxTest2()
+        {
+            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
+            var testFilePath = "Assets/StreamingAssets/Examples/csharp_sample copy.md";
+            window.LoadMarkdownFile(testFilePath);
+            window.Show();
+        }
+
+        /// <summary>
+        /// 测试ListContainer功能的菜单项
+        /// </summary>
+        [MenuItem("Tools/Markdown编辑器/测试ListContainer")]
+        public static void LoadListContainerTest()
+        {
+            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
+            var testFilePath = "Assets/StreamingAssets/Examples/list_container_test.md";
+            window.LoadMarkdownFile(testFilePath);
+            window.Show();
+        }
+
+        /// <summary>
+        /// 测试Badge渲染功能的菜单项
+        /// </summary>
+        [MenuItem("Tools/Markdown编辑器/测试Badge渲染")]
+        public static void LoadBadgeTest()
+        {
+            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
+            var testFilePath = "Assets/StreamingAssets/Examples/badge_test.md";
+            window.LoadMarkdownFile(testFilePath);
+            window.Show();
+        }
+
+        /// <summary>
+        /// 测试Emoji渲染功能的菜单项
+        /// </summary>
+        [MenuItem("Tools/Markdown编辑器/测试Emoji渲染")]
+        public static void LoadEmojiTest()
+        {
+            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
+            var testFilePath = "unity_project_document/emoji_test.md";
+            window.LoadMarkdownFile(testFilePath);
+            window.Show();
+        }
+
+        [MenuItem("Tools/ResetStyle #&r")] // Ctrl+Alt+R 快捷键
+        private static void ResetStyle()
+        {
+            FieldInfo s
+                = typeof(MarkdownStyleManager).GetField("g_inst",
+                    BindingFlags.Static | BindingFlags.NonPublic);
+
+            if (null == s)
+            {
+                return;
+            }
+
+            s.SetValue(null, null);
+            Debug.LogError("[MarkdownEditor] 样式已重置，下次打开编辑器时生效");
+        }
+
+        /// <summary>
+        /// 绘制工具栏
+        /// </summary>
+        private void DrawToolbar()
+        {
+            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+
+            // 文件操作按钮
+            if (GUILayout.Button("打开文件", EditorStyles.toolbarButton, GUILayout.Width(80)))
+            {
+                OpenFileDialog();
+            }
+
+            if (GUILayout.Button("保存文件", EditorStyles.toolbarButton, GUILayout.Width(80)))
+            {
+                SaveCurrentFile();
+            }
+
+            if (GUILayout.Button("另存为", EditorStyles.toolbarButton, GUILayout.Width(80)))
+            {
+                SaveAsDialog();
+            }
+
+            GUILayout.FlexibleSpace();
+
+            // 显示当前文件路径
+            if (!string.IsNullOrEmpty(m_currentFilePath))
+            {
+                GUILayout.Label($"当前文件: {m_currentFilePath}", EditorStyles.toolbarButton);
+            }
+
+            GUILayout.FlexibleSpace();
+
+            // 模式切换按钮
+            m_isEditMode = GUILayout.Toggle(m_isEditMode,
+                "编辑模式",
+                EditorStyles.toolbarButton,
+                GUILayout.Width(80));
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        /// <summary>
+        /// 绘制编辑模式
+        /// </summary>
+        private void DrawEditMode()
+        {
+            EditorGUILayout.LabelField("Markdown 源码编辑:", EditorStyles.boldLabel);
+
+            m_editScrollPosition = EditorGUILayout.BeginScrollView(m_editScrollPosition);
+
+            // 使用TextArea而非TextField提高大文本性能
+            string newContent = EditorGUILayout.TextArea(m_markdownContent ?? string.Empty,
+                GUILayout.ExpandHeight(true));
+
+            if (newContent != null &&
+                newContent != m_markdownContent)
+            {
+                m_markdownContent = newContent;
+            }
+
+            EditorGUILayout.EndScrollView();
+
+            EditorGUILayout.Space();
+
+            if (GUILayout.Button("预览 Markdown", GUILayout.Height(30)))
+            {
+                m_isEditMode = false;
+                // MarkdownRenderer会在下次渲染时自动解析新内容
+            }
+        }
+
+        /// <summary>
+        /// 绘制预览模式
+        /// </summary>
+        private void DrawPreviewMode()
+        {
+            EditorGUILayout.LabelField("Markdown 预览:", EditorStyles.boldLabel);
+
+            if (string.IsNullOrEmpty(m_markdownContent))
+            {
+                EditorGUILayout.HelpBox("没有内容可显示。请加载Markdown文件或切换到编辑模式创建内容。", MessageType.Info);
+
+                if (GUILayout.Button("加载示例文件", GUILayout.Height(30)))
+                {
+                    LoadMarkdownFile(g_defaultFilePath);
+                }
+            }
+            else
+            {
+                // 使用渲染器直接渲染Markdown文本
+                m_viewScrollPosition = m_markdownRenderer.RenderMarkdown(m_markdownContent,
+                    m_viewScrollPosition);
+            }
+        }
+
+        /// <summary>
+        /// 打开文件对话框
+        /// </summary>
+        private void OpenFileDialog()
+        {
+            string filePath = EditorUtility.OpenFilePanel("选择 Markdown 文件", Application.dataPath, "md");
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                // 转换为相对路径
+                if (filePath.StartsWith(Application.dataPath))
+                {
+                    filePath = "Assets" + filePath.Substring(Application.dataPath.Length);
+                }
+
+                LoadMarkdownFile(filePath);
+            }
+        }
+
+        /// <summary>
+        /// 保存当前文件
+        /// </summary>
+        private void SaveCurrentFile()
+        {
+            if (string.IsNullOrEmpty(m_currentFilePath))
+            {
+                SaveAsDialog();
+                return;
+            }
+
+            try
+            {
+                File.WriteAllText(m_currentFilePath, m_markdownContent ?? string.Empty);
+                Debug.Log($"[MarkdownEditor] 文件已保存: {m_currentFilePath}");
+
+                // 刷新AssetDatabase
+                if (m_currentFilePath.StartsWith("Assets/"))
+                {
+                    AssetDatabase.ImportAsset(m_currentFilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                EditorUtility.DisplayDialog("保存失败", $"保存文件时发生错误:\n{ex.Message}", "确定");
+            }
+        }
+
+        /// <summary>
+        /// 另存为对话框
+        /// </summary>
+        private void SaveAsDialog()
+        {
+            string filePath = EditorUtility.SaveFilePanel(
+                "保存 Markdown 文件",
+                Application.dataPath,
+                "new_markdown",
+                "md");
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                // 转换为相对路径
+                if (filePath.StartsWith(Application.dataPath))
+                {
+                    filePath = "Assets" + filePath.Substring(Application.dataPath.Length);
+                }
+
+                m_currentFilePath = filePath;
+                SaveCurrentFile();
+            }
+        }
+
+        /// <summary>
+        /// 加载Markdown文件
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <summary>
+        /// 加载Markdown文件
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        public void LoadMarkdownFile(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath) ||
+                !File.Exists(filePath))
+            {
+                EditorUtility.DisplayDialog("文件不存在", $"文件路径无效或文件不存在:\n{filePath}", "确定");
+                return;
+            }
+
+            try
+            {
+                // 清理现有内容（让MarkdownRenderer处理）
+                m_markdownRenderer?.Reset();
+
+                m_currentFilePath = filePath;
+                m_markdownContent = File.ReadAllText(filePath);
+                // MarkdownRenderer会在下次渲染时自动解析内容
+
+                Debug.Log($"[MarkdownEditor] 已加载文件: {filePath}");
+            }
+            catch (Exception ex)
+            {
+                EditorUtility.DisplayDialog("加载失败", $"加载文件时发生错误:\n{ex.Message}", "确定");
+            }
+        }
+
+        private void PlayModeStateChanged(PlayModeStateChange state)
+        {
+            switch (state)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                    m_markdownRenderer.Reset();
+                    Repaint();
+                    break;
+            }
+        }
+    }
+}
