@@ -55,3 +55,24 @@ Assets/TextMesh Pro/*/Resources/*
 # Ignore local test outputs
 Tests/**/bin/
 Tests/**/obj/
+
+.github/
+HotReload/
+/Assets/HotReload.meta
+/Assets/Resources/t.txt.meta
+/Assets/Resources/t.txt
+com.singularitygroup.hotreload
+/Assets/NewBehaviourScript.cs
+/Assets/NewBehaviourScript.cs.meta
+/Assets/NewBehaviourScript2.cs
+/Assets/NewBehaviourScript2.cs.meta
+Resources
+/Assets/Resources.meta
+/Assets/Scripts/Editor/MarkdownForEditor/Tests.meta
+/Assets/Scripts/Editor/MarkdownForEditor/Tests
+/Assets/Scripts/Editor/MarkdownForEditor/DebugTools.meta
+/Assets/Scripts/Editor/MarkdownForEditor/DebugTools
+/Assets/Scripts/Editor/MarkdownForEditor/NetworkTest.cs
+/Assets/Scripts/Editor/MarkdownForEditor/NetworkTest.cs.meta
+/Assets/Scripts/Editor/MarkdownForEditor/EmojiConverterTest.cs.meta
+/Assets/Scripts/Editor/MarkdownForEditor/EmojiConverterTest.cs

@@ -57,34 +57,33 @@
 
 ## Install & Quick Start 🚀
 
--   Option A — Copy: copy `src/Editor` into your Unity project at `Assets/UniMarkdown`.
--   Option B — Unity Package Manager (UPM):
-    1. Open Unity → Window → Package Manager
-    2. Click the + button → "Add package from git URL..."
-    3. Use: `https://github.com/QueCue/UniMarkdown.git?path=src#v0.1.0` (replace tag with the version you want)
-       - Or main branch: `https://github.com/QueCue/UniMarkdown.git?path=src`
--   Open Markdown:
-    -   Select a `.md` asset to render in the Inspector via `MarkdownInspector`.
-    -   Or open the Markdown viewer window (if provided) from the Unity menu.
+-   Copy the `Assets/Scripts/Editor/MarkdownForEditor/` directory into your project.
+-   **Open the Window**:
+    -   Via the menu: `Tools/Markdown编辑器/打开Markdown编辑器`.
+    -   Or by **double-clicking** any `.md` file in the Project window.
+-   **Load a Sample**:
+    -   `Tools/Markdown编辑器/加载示例文件`.
 
-### Extend (2-min how-to)
-
--   Renderers: add a class under `ElementRenderers/` inheriting `BaseElementRenderer`, then register it in `ElementRendererFactory` (element type → renderer).
--   Syntax highlighting: implement `ISyntaxHighlighting` and register it in `SyntaxManager` (see built-ins for C#/JSON).
-
-Tips: keep GUI paths allocation-free and reuse styles via `MarkdownStyleManager`.
+> For more details, please read `docs/Usage.md`.
 
 ---
 
 ## Contributing 🤝
 
-Issues and PRs are welcome. For larger changes, open an issue to discuss first. If this project helps you, a ⭐️ is greatly appreciated!
+We welcome all forms of contributions! Feel free to open an issue, submit a pull request, or help improve the documentation.
+
+-   **Contribution Guidelines**: Please see `docs/CONTRIBUTING.md`.
+-   **Development Suggestions**: We encourage adding test cases in `Tests/TestFiles`.
+
+**If you find this project helpful, please give it a Star ⭐️—it's the best encouragement for us!**
 
 ---
 
 ## License 📄
 
-This project is licensed under the terms described in the root [LICENSE](LICENSE).
+A formal license has not yet been chosen. Please select one before publishing.
+
+Options: MIT / Apache-2.0 / Unity Companion License (see `docs/LICENSE-TODO.md`).
 
 ---
 

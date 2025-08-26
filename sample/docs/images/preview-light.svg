@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <rect width="1200" height="720" fill="#f3f4f6" />
+  <g fill="#111827" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" text-anchor="middle">
+    <text x="600" y="320" font-size="56" font-weight="700">Preview (Light) · Placeholder</text>
+    <text x="600" y="380" font-size="28" fill="#374151">Take a screenshot of the Unity Editor window in Light theme</text>
+    <text x="600" y="640" font-size="20" fill="#4b5563">save to docs/images/preview-light.png (replace this SVG)</text>
+  </g>
+</svg>
