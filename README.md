@@ -82,6 +82,13 @@ Issues and PRs are welcome. For larger changes, open an issue to discuss first. 
 
 ---
 
+## Changelog 🗒️
+
+- English: [`CHANGELOG.md`](./CHANGELOG.md)
+- 中文: [`CHANGELOG.zh.md`](./CHANGELOG.zh.md)
+
+---
+
 ## License 📄
 
 This project is licensed under the terms described in the root [LICENSE](LICENSE).

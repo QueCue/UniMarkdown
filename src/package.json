@@ -3,7 +3,7 @@
   "displayName": "UniMarkdown",
   "version": "0.1.0",
   "unity": "2021.3",
-  "description": "A lightweight Markdown renderer and Inspector extension for the Unity Editor.",
+  "description": "The ultimate native Markdown toolkit for Unity. Edit, preview, and manage docs seamlessly inside the editor.",
   "keywords": ["markdown", "editor", "inspector", "syntax", "highlighting"],
   "author": {
     "name": "QueCue"

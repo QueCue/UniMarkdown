@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
-  <rect width="1200" height="720" fill="#0b0f14" />
-  <g fill="#e5e7eb" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" text-anchor="middle">
-    <text x="600" y="320" font-size="56" font-weight="700">Preview (Dark) · Placeholder</text>
-    <text x="600" y="380" font-size="28" fill="#a1a1aa">Take a screenshot of the Unity Editor window in Dark theme</text>
-    <text x="600" y="640" font-size="20" fill="#6b7280">save to docs/images/preview-dark.png (replace this SVG)</text>
-  </g>
-</svg>
