@@ -42,12 +42,16 @@
 ## Demo & Screenshots 🖼️
 
 ![Demo placeholder](image/preview.gif)
+<div>
+<p/>
 
-![Preview dark placeholder](docs/images/preview-dark.svg){width=45%}
-![Preview light placeholder](docs/images/preview-light.svg){width=45%}
+- Dark Theme
+![Preview dark placeholder](image/preview-dark.png){width=100%}
+<p/>
 
-> These are placeholders. Replace with your real `docs/images/demo.gif` and `preview-dark.png` / `preview-light.png` after recording.
-
+- Light Theme
+![Preview light placeholder](image/preview-light.png){width=100%}
+<>
 
 ## Why UniMarkdown? ❓
 
