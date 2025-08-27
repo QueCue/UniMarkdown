@@ -1,17 +1,37 @@
+<div align="center">
+
 ![UniMarkdown Banner](https://capsule-render.vercel.app/api?type=waving&color=gradient&height=120&text=UniMarkdown&fontAlign=50&fontAlignY=35&fontSize=40&animation=fadeIn)
 
 # UniMarkdown
-[![Unity](https://img.shields.io/badge/Unity-2021.3%2B-555555?logo=unity&logoColor=white)](ProjectSettings/ProjectVersion.txt)
-[![Platform](https://img.shields.io/badge/Editor-Extension-2e7d32)](#)
-[![Lang](https://img.shields.io/badge/C%23-Editor%20Tools-239120?logo=.net&logoColor=white)](#)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Made with Unity](https://img.shields.io/badge/Made%20with-Unity-555555.svg?logo=unity)](https://unity.com)
+<p>
+  <img src="https://img.shields.io/badge/Unity-2021.3%2B-4ecdc4?style=for-the-badge&logo=unity&logoColor=white&labelColor=1a1a2e"/>
+  <img src="https://img.shields.io/badge/Editor-Extension-ff6b6b?style=for-the-badge&logo=unity&logoColor=white&labelColor=1a1a2e"/>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&logoColor=white&labelColor=1a1a2e"/></a>
+</p>
+<p>
+  <img src="https://img.shields.io/badge/C%23-Editor%20Tools-7289da?style=for-the-badge&logo=.Net&logoColor=white&labelColor=1a1a2e"/>
+  <a href="https://unity.com"><img src="https://img.shields.io/badge/Made%20with-Unity-07c160?style=for-the-badge&logo=unity&logoColor=white&labelColor=1a1a2e"/></a>
+</p>
+
+<div align="center">
+  <div style="width: 100%; height: 2px; margin: 20px 0; background: linear-gradient(90deg, transparent, #00d9ff, transparent);"></div>
+</div>
+
+<div align="center">
+  <a href="#-quick-start" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Quick%20Start-Get%20Started%20Now-00d9ff?style=for-the-badge&logo=rocket&logoColor=white&labelColor=1a1a2e">
+  </a>
+</div>
+
+<p/>
+<p/>
 
 [中文说明](./README.zh.md) | English
 
 > **The ultimate native Markdown editor for Unity. Fast, beautiful, and deeply integrated.**
 
 ---
+</div>
 
 <!-- Dynamic badges (uncomment and replace OWNER/REPO after publishing)
 [![Stars](https://img.shields.io/github/stars/OWNER/REPO?style=social)](https://github.com/OWNER/REPO/stargazers)
