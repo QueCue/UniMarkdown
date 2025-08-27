@@ -41,6 +41,7 @@
 
 ## Demo & Screenshots 🖼️
 
+- GIF Demo
 ![Demo placeholder](image/preview.gif)
 <div>
 <p/>

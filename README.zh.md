@@ -43,6 +43,7 @@
 
 ## 演示与截图 🖼️
 
+- GIF演示
 ![Demo placeholder](image/preview_zh.gif)
 <div>
 <p/>
