@@ -92,7 +92,7 @@
 
 Tips: keep GUI paths allocation-free and reuse styles via `MarkdownStyleManager`.
 
-## Renderer Support Status
+## Renderer Support Status ⚡
 
 - Current Support
   - Headers
@@ -125,7 +125,7 @@ Tips: keep GUI paths allocation-free and reuse styles via `MarkdownStyleManager`
 Issues and PRs are welcome. For larger changes, open an issue to discuss first. If this project helps you, a ⭐️ is greatly appreciated!
 
 
-## Changelog 🗒️
+## Changelog 📝
 
 - English: [`CHANGELOG.md`](./CHANGELOG.md)
 - 中文: [`CHANGELOG.zh.md`](./CHANGELOG.zh.md)
