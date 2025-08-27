@@ -30,7 +30,6 @@
 
 > **The ultimate native Markdown editor for Unity. Fast, beautiful, and deeply integrated.**
 
----
 </div>
 
 <!-- Dynamic badges (uncomment and replace OWNER/REPO after publishing)
@@ -49,7 +48,6 @@
 
 > These are placeholders. Replace with your real `docs/images/demo.gif` and `preview-dark.png` / `preview-light.png` after recording.
 
----
 
 ## Why UniMarkdown? ❓
 
@@ -58,7 +56,6 @@
 -   ✅ **Highly Extensible**: Easily add custom syntax highlighters and element renderers to meet your team's specific needs.
 -   ✅ **Familiar Feel**: A perfect replica of the GitHub style you know and love, including Emoji support 🎉.
 
----
 
 ## Features ✨
 
@@ -75,7 +72,6 @@
 -   ✅ **High Performance**: Core parsing logic is optimized to minimize GC Alloc.
 -   ✅ **Easy to Extend**: Modular renderer and syntax highlighting systems.
 
----
 
 ## Install & Quick Start 🚀
 
@@ -96,20 +92,44 @@
 
 Tips: keep GUI paths allocation-free and reuse styles via `MarkdownStyleManager`.
 
----
+## Renderer Support Status
+
+- Current Support
+  - Headers
+  - Bold, Italic, BoldItalic
+  - Text
+  - Soft line break / Hard line break
+  - Divider / Horizontal Rule
+  - ListItem: unordered / ordered
+  - Nested List
+  - Task List
+  - Nested Task List
+  - Link
+  - Image (with size parameters)
+  - Code Block (built-in C#/JSON syntax highlighting)
+  - Inline Code
+
+- Planned (Roadmap)
+  - Table
+  - Emoji
+  - Line numbers for code blocks
+  - Blockquote
+  - Strikethrough
+  - Footnote
+  - Callout / Admonition (tip/note/warning blocks)
+  - Mermaid diagrams (optional; via external rendering or cached static images)
+
 
 ## Contributing 🤝
 
 Issues and PRs are welcome. For larger changes, open an issue to discuss first. If this project helps you, a ⭐️ is greatly appreciated!
 
----
 
 ## Changelog 🗒️
 
 - English: [`CHANGELOG.md`](./CHANGELOG.md)
 - 中文: [`CHANGELOG.zh.md`](./CHANGELOG.zh.md)
 
----
 
 ## License 📄
 
