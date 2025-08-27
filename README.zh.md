@@ -48,11 +48,11 @@
 <div>
 <p/>
 
-- Dark Theme
+- Dark 主题
 ![Preview dark placeholder](image/preview-dark_zh.png)
 <p/>
 
-- Light Theme
+- Light 主题
 ![Preview light placeholder](image/preview-light_zh.png)
 </div>
 
