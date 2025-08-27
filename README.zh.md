@@ -18,7 +18,7 @@
 </div>
 
 <div align="center">
-  <a href="#install--quick-start-" style="text-decoration: none;">
+  <a href="#安装与快速开始-" style="text-decoration: none;">
     <img src="https://img.shields.io/badge/Quick%20Start-Get%20Started%20Now-00d9ff?style=for-the-badge&logo=rocket&logoColor=white&labelColor=1a1a2e">
   </a>
 </div>
