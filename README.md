@@ -46,12 +46,12 @@
 <p/>
 
 - Dark Theme
-![Preview dark placeholder](image/preview-dark.png){width=100%}
+![Preview dark placeholder](image/preview-dark.png)
 <p/>
 
 - Light Theme
-![Preview light placeholder](image/preview-light.png){width=100%}
-<>
+![Preview light placeholder](image/preview-light.png)
+</div>
 
 ## Why UniMarkdown? ❓
 

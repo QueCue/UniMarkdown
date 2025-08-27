@@ -44,11 +44,16 @@
 ## 演示与截图 🖼️
 
 ![Demo placeholder](image/preview_zh.gif)
+<div>
+<p/>
 
-![Preview dark placeholder](docs/images/preview-dark.svg){width=45%}
-![Preview light placeholder](docs/images/preview-light.svg){width=45%}
+- Dark Theme
+![Preview dark placeholder](image/preview-dark_zh.png)
+<p/>
 
-> 当前为占位图。请将实际录制的 `docs/images/demo.gif` 和截图 `preview-dark.png` / `preview-light.png` 覆盖到相同文件名（或更新链接）。
+- Light Theme
+![Preview light placeholder](image/preview-light_zh.png)
+</div>
 
 ## 为什么选择 UniMarkdown ❓
 
