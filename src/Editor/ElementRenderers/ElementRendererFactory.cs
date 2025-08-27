@@ -143,7 +143,7 @@ namespace UniMarkdown.Editor
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[ElementRendererFactory] 创建渲染器失败: {rendererType.Name}, 错误: {ex.Message}");
+                Debug.LogError($"[ElementRendererFactory] Failed to create renderer: {rendererType.Name}, error: {ex.Message}");
                 return null;
             }
         }

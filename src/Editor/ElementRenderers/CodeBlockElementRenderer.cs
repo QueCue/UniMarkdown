@@ -115,7 +115,7 @@ namespace UniMarkdown.Editor
             {
                 // 使用Unity的系统剪贴板API
                 GUIUtility.systemCopyBuffer = element.content;
-                Debug.Log("[MarkdownRenderer] 代码已复制到剪贴板");
+                Debug.Log("[MarkdownRenderer] Code copied to clipboard");
 
                 // 更新当前代码块的复制状态
                 copyState.IsCopied = true;

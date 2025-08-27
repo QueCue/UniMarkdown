@@ -11,7 +11,7 @@ namespace UniMarkdown.Editor
     /// </summary>
     public sealed class MarkdownEditorWindow : EditorWindow
     {
-        private const string g_windowTitle = "Markdown 编辑器";
+        private const string g_windowTitle = "Markdown Editor";
         private const string g_defaultFilePath = "Assets/StreamingAssets/Examples/sample.md";
 
         [SerializeField]
@@ -99,7 +99,7 @@ namespace UniMarkdown.Editor
                 string fileContent = File.ReadAllText(m_currentFilePath);
                 if (fileContent != m_markdownContent)
                 {
-                    if (EditorUtility.DisplayDialog("文件已修改", "检测到文件被外部修改，是否重新加载？", "重新加载", "保持当前内容"))
+                    if (EditorUtility.DisplayDialog("File Modified", "File was modified externally. Do you want to reload it?", "Reload", "Keep Current"))
                     {
                         m_markdownContent = fileContent;
                         // MarkdownRenderer会自动检测内容变化并重新解析
@@ -111,7 +111,7 @@ namespace UniMarkdown.Editor
         /// <summary>
         /// 显示窗口的菜单项
         /// </summary>
-        [MenuItem("Tools/Markdown编辑器/打开Markdown编辑器")]
+        [MenuItem("UniMarkdown/Markdown Editor/Open Markdown Editor")]
         public static void ShowWindow()
         {
             var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
@@ -134,7 +134,7 @@ namespace UniMarkdown.Editor
         /// <summary>
         /// 加载示例文件的菜单项
         /// </summary>
-        [MenuItem("Tools/Markdown编辑器/加载示例文件")]
+        [MenuItem("UniMarkdown/Markdown Editor/Load Sample File")]
         public static void LoadSampleFile()
         {
             var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
@@ -145,7 +145,7 @@ namespace UniMarkdown.Editor
         /// <summary>
         /// 加载C#语法高亮测试文件的菜单项
         /// </summary>
-        [MenuItem("Tools/Markdown编辑器/测试C#语法高亮")]
+        [MenuItem("UniMarkdown/Markdown Editor/Test C# Syntax Highlighting")]
         public static void LoadCSharpSyntaxTest()
         {
             var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
@@ -157,7 +157,7 @@ namespace UniMarkdown.Editor
         /// <summary>
         /// 加载C#语法高亮测试文件的菜单项
         /// </summary>
-        [MenuItem("Tools/Markdown编辑器/测试C#语法高亮2")]
+        [MenuItem("UniMarkdown/Markdown Editor/Test C# Syntax Highlighting 2")]
         public static void LoadCSharpSyntaxTest2()
         {
             var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
@@ -169,7 +169,7 @@ namespace UniMarkdown.Editor
         /// <summary>
         /// 测试ListContainer功能的菜单项
         /// </summary>
-        [MenuItem("Tools/Markdown编辑器/测试ListContainer")]
+        [MenuItem("UniMarkdown/Markdown Editor/Test List Container")]
         public static void LoadListContainerTest()
         {
             var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
@@ -181,7 +181,7 @@ namespace UniMarkdown.Editor
         /// <summary>
         /// 测试Badge渲染功能的菜单项
         /// </summary>
-        [MenuItem("Tools/Markdown编辑器/测试Badge渲染")]
+        [MenuItem("UniMarkdown/Markdown Editor/Test Badge Rendering")]
         public static void LoadBadgeTest()
         {
             var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
@@ -193,7 +193,7 @@ namespace UniMarkdown.Editor
         /// <summary>
         /// 测试Emoji渲染功能的菜单项
         /// </summary>
-        [MenuItem("Tools/Markdown编辑器/测试Emoji渲染")]
+        [MenuItem("UniMarkdown/Markdown Editor/Test Emoji Rendering")]
         public static void LoadEmojiTest()
         {
             var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
@@ -202,7 +202,7 @@ namespace UniMarkdown.Editor
             window.Show();
         }
 
-        [MenuItem("Tools/ResetStyle #&r")] // Ctrl+Alt+R 快捷键
+        [MenuItem("UniMarkdown/ResetStyle #&r")] // Ctrl+Alt+R 快捷键
         private static void ResetStyle()
         {
             FieldInfo s
@@ -215,7 +215,7 @@ namespace UniMarkdown.Editor
             }
 
             s.SetValue(null, null);
-            Debug.LogError("[MarkdownEditor] 样式已重置，下次打开编辑器时生效");
+            Debug.LogError("[MarkdownEditor] Styles reset. Changes will take effect when editor reopens");
         }
 
         /// <summary>
@@ -226,17 +226,17 @@ namespace UniMarkdown.Editor
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
             // 文件操作按钮
-            if (GUILayout.Button("打开文件", EditorStyles.toolbarButton, GUILayout.Width(80)))
+            if (GUILayout.Button("Open File", EditorStyles.toolbarButton, GUILayout.Width(80)))
             {
                 OpenFileDialog();
             }
 
-            if (GUILayout.Button("保存文件", EditorStyles.toolbarButton, GUILayout.Width(80)))
+            if (GUILayout.Button("Save File", EditorStyles.toolbarButton, GUILayout.Width(80)))
             {
                 SaveCurrentFile();
             }
 
-            if (GUILayout.Button("另存为", EditorStyles.toolbarButton, GUILayout.Width(80)))
+            if (GUILayout.Button("Save As", EditorStyles.toolbarButton, GUILayout.Width(80)))
             {
                 SaveAsDialog();
             }
@@ -246,14 +246,14 @@ namespace UniMarkdown.Editor
             // 显示当前文件路径
             if (!string.IsNullOrEmpty(m_currentFilePath))
             {
-                GUILayout.Label($"当前文件: {m_currentFilePath}", EditorStyles.toolbarButton);
+                GUILayout.Label($"Current File: {m_currentFilePath}", EditorStyles.toolbarButton);
             }
 
             GUILayout.FlexibleSpace();
 
             // 模式切换按钮
             m_isEditMode = GUILayout.Toggle(m_isEditMode,
-                "编辑模式",
+                "Edit Mode",
                 EditorStyles.toolbarButton,
                 GUILayout.Width(80));
 
@@ -265,7 +265,7 @@ namespace UniMarkdown.Editor
         /// </summary>
         private void DrawEditMode()
         {
-            EditorGUILayout.LabelField("Markdown 源码编辑:", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Markdown Source Editing:", EditorStyles.boldLabel);
 
             m_editScrollPosition = EditorGUILayout.BeginScrollView(m_editScrollPosition);
 
@@ -283,7 +283,7 @@ namespace UniMarkdown.Editor
 
             EditorGUILayout.Space();
 
-            if (GUILayout.Button("预览 Markdown", GUILayout.Height(30)))
+            if (GUILayout.Button("Preview Markdown", GUILayout.Height(30)))
             {
                 m_isEditMode = false;
                 // MarkdownRenderer会在下次渲染时自动解析新内容
@@ -295,13 +295,13 @@ namespace UniMarkdown.Editor
         /// </summary>
         private void DrawPreviewMode()
         {
-            EditorGUILayout.LabelField("Markdown 预览:", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Markdown Preview:", EditorStyles.boldLabel);
 
             if (string.IsNullOrEmpty(m_markdownContent))
             {
-                EditorGUILayout.HelpBox("没有内容可显示。请加载Markdown文件或切换到编辑模式创建内容。", MessageType.Info);
+                EditorGUILayout.HelpBox("No content to display. Please load a Markdown file or switch to Edit Mode to create content.", MessageType.Info);
 
-                if (GUILayout.Button("加载示例文件", GUILayout.Height(30)))
+                if (GUILayout.Button("Load Sample File", GUILayout.Height(30)))
                 {
                     LoadMarkdownFile(g_defaultFilePath);
                 }
@@ -319,7 +319,7 @@ namespace UniMarkdown.Editor
         /// </summary>
         private void OpenFileDialog()
         {
-            string filePath = EditorUtility.OpenFilePanel("选择 Markdown 文件", Application.dataPath, "md");
+            string filePath = EditorUtility.OpenFilePanel("Select Markdown File", Application.dataPath, "md");
 
             if (!string.IsNullOrEmpty(filePath))
             {
@@ -347,7 +347,7 @@ namespace UniMarkdown.Editor
             try
             {
                 File.WriteAllText(m_currentFilePath, m_markdownContent ?? string.Empty);
-                Debug.Log($"[MarkdownEditor] 文件已保存: {m_currentFilePath}");
+                Debug.Log($"[MarkdownEditor] File saved: {m_currentFilePath}");
 
                 // 刷新AssetDatabase
                 if (m_currentFilePath.StartsWith("Assets/"))
@@ -357,7 +357,7 @@ namespace UniMarkdown.Editor
             }
             catch (Exception ex)
             {
-                EditorUtility.DisplayDialog("保存失败", $"保存文件时发生错误:\n{ex.Message}", "确定");
+                EditorUtility.DisplayDialog("Save Failed", $"Error saving file:\n{ex.Message}", "OK");
             }
         }
 
@@ -367,7 +367,7 @@ namespace UniMarkdown.Editor
         private void SaveAsDialog()
         {
             string filePath = EditorUtility.SaveFilePanel(
-                "保存 Markdown 文件",
+                "Save Markdown File",
                 Application.dataPath,
                 "new_markdown",
                 "md");
@@ -398,7 +398,7 @@ namespace UniMarkdown.Editor
             if (string.IsNullOrEmpty(filePath) ||
                 !File.Exists(filePath))
             {
-                EditorUtility.DisplayDialog("文件不存在", $"文件路径无效或文件不存在:\n{filePath}", "确定");
+                EditorUtility.DisplayDialog("File Not Found", $"Invalid path or file does not exist:\n{filePath}", "OK");
                 return;
             }
 
@@ -411,11 +411,11 @@ namespace UniMarkdown.Editor
                 m_markdownContent = File.ReadAllText(filePath);
                 // MarkdownRenderer会在下次渲染时自动解析内容
 
-                Debug.Log($"[MarkdownEditor] 已加载文件: {filePath}");
+                Debug.Log($"[MarkdownEditor] File loaded: {filePath}");
             }
             catch (Exception ex)
             {
-                EditorUtility.DisplayDialog("加载失败", $"加载文件时发生错误:\n{ex.Message}", "确定");
+                EditorUtility.DisplayDialog("Load Failed", $"Error loading file:\n{ex.Message}", "OK");
             }
         }
 

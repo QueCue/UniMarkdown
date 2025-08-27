@@ -104,7 +104,7 @@ namespace UniMarkdown.Editor
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[MarkdownParser] 解析Markdown时发生错误: {ex.Message}");
+                Debug.LogError($"[MarkdownParser] Error parsing Markdown: {ex.Message}");
             }
         }
 
@@ -747,7 +747,7 @@ namespace UniMarkdown.Editor
                     }
                     else
                     {
-                        Debug.LogError($"[IMAGE] 解析宽度失败: '{value}'");
+                        Debug.LogError($"[IMAGE] Failed to parse width: '{value}'");
                     }
                 }
                 else if (part.StartsWith("height="))
@@ -765,7 +765,7 @@ namespace UniMarkdown.Editor
                     }
                     else
                     {
-                        Debug.LogError($"[IMAGE] 解析高度失败: '{value}'");
+                        Debug.LogError($"[IMAGE] Failed to parse height: '{value}'");
                     }
                 }
             }

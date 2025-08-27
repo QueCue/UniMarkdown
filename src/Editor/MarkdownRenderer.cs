@@ -108,7 +108,7 @@ namespace UniMarkdown.Editor
             if (elements == null ||
                 elements.Count == 0)
             {
-                EditorGUILayout.LabelField("没有内容可显示", EditorStyles.centeredGreyMiniLabel);
+                EditorGUILayout.LabelField("No content to display", EditorStyles.centeredGreyMiniLabel);
                 return Vector2.zero;
             }
 
@@ -312,7 +312,7 @@ namespace UniMarkdown.Editor
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[MarkdownRenderer] 解析Markdown时发生错误: {ex.Message}");
+                Debug.LogError($"[MarkdownRenderer] Error parsing Markdown: {ex.Message}");
 
                 // 出错时清空元素列表
                 for (var i = 0; i < m_markdownElements.Count; i++)

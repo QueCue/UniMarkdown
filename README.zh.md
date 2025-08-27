@@ -41,9 +41,9 @@
 [![Release](https://img.shields.io/github/v/release/OWNER/REPO)](https://github.com/OWNER/REPO/releases)
 -->
 
-## 在线演示与截图 🖼️
+## 演示与截图 🖼️
 
-![Demo placeholder](docs/images/demo.svg =800x)
+![Demo placeholder](image/preview_zh.gif)
 
 ![Preview dark placeholder](docs/images/preview-dark.svg){width=45%}
 ![Preview light placeholder](docs/images/preview-light.svg){width=45%}
@@ -87,14 +87,14 @@
     - 在 Project 视图选中任意 `.md` 资源，可在 Inspector 中通过 `MarkdownInspector` 渲染。
     - 或通过 Unity 菜单打开 Markdown 预览窗口（如已提供）。
 
-### 扩展（2 分钟上手）
+### 扩展（2 分钟上手） ⚡
 
 -   渲染器：在 `ElementRenderers/` 下新建继承 `BaseElementRenderer` 的类，并在 `ElementRendererFactory` 注册（元素类型 → 渲染器）。
 -   语法高亮：实现 `ISyntaxHighlighting` 并在 `SyntaxManager` 注册（参考内置 C#/JSON）。
 
 提示：在 GUI 循环中避免分配，样式建议统一由 `MarkdownStyleManager` 复用管理。
 
-## 渲染器支持情况 ⚡
+## 渲染器支持情况 🎯
 
 - 当前支持
   - 标题（Header）

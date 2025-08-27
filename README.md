@@ -41,7 +41,7 @@
 
 ## Demo & Screenshots 🖼️
 
-![Demo placeholder](docs/images/demo.svg =800x)
+![Demo placeholder](image/preview.gif)
 
 ![Preview dark placeholder](docs/images/preview-dark.svg){width=45%}
 ![Preview light placeholder](docs/images/preview-light.svg){width=45%}
@@ -85,14 +85,14 @@
     -   Select a `.md` asset to render in the Inspector via `MarkdownInspector`.
     -   Or open the Markdown viewer window (if provided) from the Unity menu.
 
-### Extend (2-min how-to)
+### Extend (2-min how-to) ⚡
 
 -   Renderers: add a class under `ElementRenderers/` inheriting `BaseElementRenderer`, then register it in `ElementRendererFactory` (element type → renderer).
 -   Syntax highlighting: implement `ISyntaxHighlighting` and register it in `SyntaxManager` (see built-ins for C#/JSON).
 
 Tips: keep GUI paths allocation-free and reuse styles via `MarkdownStyleManager`.
 
-## Renderer Support Status ⚡
+## Renderer Support Status 🎯
 
 - Current Support
   - Headers

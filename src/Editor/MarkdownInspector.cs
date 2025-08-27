@@ -94,7 +94,7 @@ namespace UniMarkdown.Editor
                 if (!textAsset ||
                     string.IsNullOrEmpty(textAsset.text))
                 {
-                    EditorGUILayout.HelpBox("Markdown文件为空或无法读取", MessageType.Info);
+                    EditorGUILayout.HelpBox("Markdown file is empty or cannot be read", MessageType.Info);
                 }
                 else
                 {
@@ -106,7 +106,7 @@ namespace UniMarkdown.Editor
             if (m_showOriginalInspector)
             {
                 EditorGUILayout.Space(10);
-                EditorGUILayout.LabelField("原始Inspector", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("Original Inspector", EditorStyles.boldLabel);
                 if (m_defaultEditor != null)
                 {
                     m_defaultEditor.OnInspectorGUI();
@@ -122,7 +122,7 @@ namespace UniMarkdown.Editor
             EditorGUILayout.BeginHorizontal();
 
             bool newShowPreview
-                = EditorGUILayout.ToggleLeft("显示Markdown预览", m_showMarkdownPreview, GUILayout.Width(150));
+                = EditorGUILayout.ToggleLeft("Show Markdown Preview", m_showMarkdownPreview, GUILayout.Width(150));
 
             if (newShowPreview != m_showMarkdownPreview)
             {
@@ -131,7 +131,7 @@ namespace UniMarkdown.Editor
             }
 
             bool newShowOriginal
-                = EditorGUILayout.ToggleLeft("显示原始Inspector", m_showOriginalInspector, GUILayout.Width(150));
+                = EditorGUILayout.ToggleLeft("Show Original Inspector", m_showOriginalInspector, GUILayout.Width(150));
 
             if (newShowOriginal != m_showOriginalInspector)
             {
@@ -144,12 +144,12 @@ namespace UniMarkdown.Editor
             // 快捷操作按钮
             EditorGUILayout.BeginHorizontal();
 
-            if (GUILayout.Button("在编辑器中打开", GUILayout.Width(120)))
+            if (GUILayout.Button("Open in Editor", GUILayout.Width(120)))
             {
                 AssetDatabase.OpenAsset(target);
             }
 
-            if (GUILayout.Button("刷新预览", GUILayout.Width(80)))
+            if (GUILayout.Button("Refresh", GUILayout.Width(80)))
             {
                 m_markdownRenderer?.Reset();
                 Repaint();

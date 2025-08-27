@@ -67,7 +67,7 @@ namespace UniMarkdown.Editor
                     return m_failLoadIcon;
                 }
 
-                m_failLoadIcon = new GUIContent("图片加载失败",
+                m_failLoadIcon = new GUIContent("Image failed to load",
                     EditorGUIUtility.IconContent("RawImage Icon").image);
 
                 return m_failLoadIcon;
@@ -131,7 +131,7 @@ namespace UniMarkdown.Editor
                 case NetworkImageStatus.NotStarted:
                     // 开始异步下载
                     StartNetworkImageDownload(element.url);
-                    GUILayout.Label($"[正在加载图片...] {element.url}", EditorStyles.miniLabel);
+                    GUILayout.Label($"[Loading image...] {element.url}", EditorStyles.miniLabel);
                     break;
 
                 case NetworkImageStatus.Downloading:
@@ -141,11 +141,11 @@ namespace UniMarkdown.Editor
                         string progressText;
                         if (progress.TotalBytes > 0)
                         {
-                            progressText = $"[正在下载图片... {progress.Percentage:P1}] {progress.SizeText}";
+                            progressText = $"[Downloading image... {progress.Percentage:P1}] {progress.SizeText}";
                         }
                         else
                         {
-                            progressText = $"[正在下载图片...] {FormatBytes(progress.BytesReceived)}";
+                            progressText = $"[Downloading image...] {FormatBytes(progress.BytesReceived)}";
                         }
 
                         GUILayout.Label(progressText, EditorStyles.miniLabel);
@@ -159,17 +159,17 @@ namespace UniMarkdown.Editor
                     }
                     else
                     {
-                        GUILayout.Label($"[正在下载图片...] {element.url}", EditorStyles.miniLabel);
+                        GUILayout.Label($"[Downloading image...] {element.url}", EditorStyles.miniLabel);
                     }
 
                     break;
 
                 case NetworkImageStatus.Failed:
                     // 显示失败状态
-                    GUILayout.Label($"[图片下载失败] {element.url}", EditorStyles.miniLabel);
+                    GUILayout.Label($"[Image download failed] {element.url}", EditorStyles.miniLabel);
                     if (!string.IsNullOrEmpty(element.altText))
                     {
-                        GUILayout.Label($"Alt文本: {element.altText}", EditorStyles.miniLabel);
+                        GUILayout.Label($"Alt text: {element.altText}", EditorStyles.miniLabel);
                     }
 
                     break;
@@ -183,7 +183,7 @@ namespace UniMarkdown.Editor
                     }
                     else
                     {
-                        GUILayout.Label($"[图片缓存丢失] {element.url}", EditorStyles.miniLabel);
+                        GUILayout.Label($"[Image cache missing] {element.url}", EditorStyles.miniLabel);
                         status = NetworkImageStatus.NotStarted;
                         g_networkImageStatus[element.url] = status;
                     }
@@ -355,7 +355,7 @@ namespace UniMarkdown.Editor
             else
             {
                 g_networkImageStatus[url] = NetworkImageStatus.Failed;
-                Debug.LogError($"[IMAGE] 异步下载失败: {url}");
+                Debug.LogError($"[IMAGE] Async download failed: {url}");
             }
 
             // 刷新GUI显示
@@ -404,7 +404,7 @@ namespace UniMarkdown.Editor
             else
             {
                 g_networkImageStatus[originalUrl] = NetworkImageStatus.Failed;
-                Debug.LogError($"[BADGE] Badge下载失败: {originalUrl} (PNG URL: {downloadUrl})");
+                Debug.LogError($"[BADGE] Badge download failed: {originalUrl} (PNG URL: {downloadUrl})");
             }
 
             // 刷新GUI显示
@@ -431,7 +431,7 @@ namespace UniMarkdown.Editor
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[IMAGE] 创建纹理失败: {ex.Message}");
+                Debug.LogError($"[IMAGE] Failed to create texture: {ex.Message}");
                 return null;
             }
         }
@@ -502,7 +502,7 @@ namespace UniMarkdown.Editor
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[IMAGE] 图片加载异常: {imagePath}, 错误: {ex.Message}");
+                Debug.LogError($"[IMAGE] Error loading image: {imagePath}, error: {ex.Message}");
                 if (texture != null)
                 {
                     Object.DestroyImmediate(texture);
@@ -564,7 +564,7 @@ namespace UniMarkdown.Editor
         {
             if (!File.Exists(absolutePath))
             {
-                Debug.LogError($"[IMAGE] 绝对路径文件不存在: {absolutePath}");
+                Debug.LogError($"[IMAGE] File not found at absolute path: {absolutePath}");
                 return null;
             }
 
@@ -584,7 +584,7 @@ namespace UniMarkdown.Editor
                 return texture;
             }
 
-            Debug.LogWarning($"[IMAGE] AssetDatabase加载失败: {assetPath}");
+            Debug.LogWarning($"[IMAGE] AssetDatabase load failed: {assetPath}");
             return null;
         }
 
@@ -613,7 +613,7 @@ namespace UniMarkdown.Editor
                 return LoadImageFromFile(streamingAssetsPath);
             }
 
-            Debug.LogError($"[IMAGE] StreamingAssets图片文件不存在: {streamingAssetsPath}");
+            Debug.LogError($"[IMAGE] Image file not found in StreamingAssets: {streamingAssetsPath}");
             return null;
         }
 
@@ -633,20 +633,20 @@ namespace UniMarkdown.Editor
                 string extension = fileInfo.Extension.ToLower();
                 if (!IsValidImageFormat(extension))
                 {
-                    Debug.LogError($"[IMAGE] 不支持的图片格式: {extension}, 支持的格式: .png, .jpg, .jpeg, .bmp, .tga");
+                    Debug.LogError($"[IMAGE] Unsupported image format: {extension}, supported formats: .png, .jpg, .jpeg, .bmp, .tga");
                     return null;
                 }
 
                 // 检查文件大小是否合理
                 if (fileInfo.Length == 0)
                 {
-                    Debug.LogError($"[IMAGE] 图片文件为空: {filePath}");
+                    Debug.LogError($"[IMAGE] Image file is empty: {filePath}");
                     return null;
                 }
 
-                if (fileInfo.Length > 50 * 1024 * 1024) // 50MB限制
+                if (fileInfo.Length > 50 * 1024 * 1024) // 50MB limit
                 {
-                    Debug.LogError($"[IMAGE] 图片文件过大 ({fileInfo.Length / (1024 * 1024)}MB): {filePath}");
+                    Debug.LogError($"[IMAGE] File too large ({fileInfo.Length / (1024 * 1024)}MB): {filePath}");
                     return null;
                 }
 
@@ -659,15 +659,15 @@ namespace UniMarkdown.Editor
                     return texture;
                 }
 
-                Debug.LogError($"[IMAGE] 图片数据格式不支持或损坏: {filePath}");
-                Debug.LogError($"[IMAGE] 文件大小: {imageData.Length} bytes");
-                Debug.LogError($"[IMAGE] 文件扩展名: {extension}");
+                Debug.LogError($"[IMAGE] Image data format unsupported or corrupted: {filePath}");
+                Debug.LogError($"[IMAGE] File size: {imageData.Length} bytes");
+                Debug.LogError($"[IMAGE] File extension: {extension}");
 
                 // 检查文件头部字节以诊断格式问题
                 if (imageData.Length >= 4)
                 {
                     var hexHeader = BitConverter.ToString(imageData, 0, Math.Min(8, imageData.Length));
-                    Debug.LogError($"[IMAGE] 文件头部字节: {hexHeader}");
+                    Debug.LogError($"[IMAGE] File header bytes: {hexHeader}");
                 }
 
                 Object.DestroyImmediate(texture);
@@ -675,7 +675,7 @@ namespace UniMarkdown.Editor
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[IMAGE] 读取文件时发生异常: {filePath}, 错误: {ex.Message}");
+                Debug.LogError($"[IMAGE] Error reading file: {filePath}, error: {ex.Message}");
                 return null;
             }
         }
@@ -759,7 +759,7 @@ namespace UniMarkdown.Editor
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"[IMAGE] 启动异步下载失败: {m_url}, 错误: {ex.Message}");
+                    Debug.LogError($"[IMAGE] Failed to start async download: {m_url}, error: {ex.Message}");
                     g_networkImageStatus[m_url] = NetworkImageStatus.Failed;
                     m_onComplete?.Invoke(m_url, null);
                 }
@@ -771,7 +771,7 @@ namespace UniMarkdown.Editor
                 {
                     if (e.Error != null)
                     {
-                        Debug.LogError($"[IMAGE] 下载错误: {m_url}, 错误: {e.Error.Message}");
+                        Debug.LogError($"[IMAGE] Download error: {m_url}, error: {e.Error.Message}");
                         g_networkImageStatus[m_url] = NetworkImageStatus.Failed;
                         g_downloadProgress.Remove(m_url); // 清理进度信息
                         m_onComplete?.Invoke(m_url, null);
@@ -780,7 +780,7 @@ namespace UniMarkdown.Editor
 
                     if (e.Cancelled)
                     {
-                        Debug.LogWarning($"[IMAGE] 下载被取消: {m_url}");
+                        Debug.LogWarning($"[IMAGE] Download cancelled: {m_url}");
                         g_networkImageStatus[m_url] = NetworkImageStatus.Failed;
                         g_downloadProgress.Remove(m_url); // 清理进度信息
                         m_onComplete?.Invoke(m_url, null);
@@ -791,16 +791,16 @@ namespace UniMarkdown.Editor
                     if (imageData == null ||
                         imageData.Length == 0)
                     {
-                        Debug.LogError($"[IMAGE] 网络图片数据为空: {m_url}");
+                        Debug.LogError($"[IMAGE] Network image data is empty: {m_url}");
                         g_networkImageStatus[m_url] = NetworkImageStatus.Failed;
                         g_downloadProgress.Remove(m_url); // 清理进度信息
                         m_onComplete?.Invoke(m_url, null);
                         return;
                     }
 
-                    if (imageData.Length > 50 * 1024 * 1024) // 50MB限制
+                    if (imageData.Length > 50 * 1024 * 1024) // 50MB limit
                     {
-                        Debug.LogError($"[IMAGE] 网络图片文件过大 ({imageData.Length / (1024 * 1024)}MB): {m_url}");
+                        Debug.LogError($"[IMAGE] Network image file too large ({imageData.Length / (1024 * 1024)}MB): {m_url}");
                         g_networkImageStatus[m_url] = NetworkImageStatus.Failed;
                         g_downloadProgress.Remove(m_url); // 清理进度信息
                         m_onComplete?.Invoke(m_url, null);
@@ -827,7 +827,7 @@ namespace UniMarkdown.Editor
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"[IMAGE] 处理下载结果失败: {m_url}, 错误: {ex.Message}");
+                    Debug.LogError($"[IMAGE] Failed to process download result: {m_url}, error: {ex.Message}");
                     g_networkImageStatus[m_url] = NetworkImageStatus.Failed;
                     g_downloadProgress.Remove(m_url); // 清理进度信息
                     m_onComplete?.Invoke(m_url, null);
@@ -943,13 +943,13 @@ namespace UniMarkdown.Editor
                     host.Contains("circleci.com") ||
                     host.Contains("coveralls.io"))
                 {
-                    Debug.LogWarning($"[BADGE] 该Badge服务可能不支持PNG格式，将显示占位符: {host}");
+                    Debug.LogWarning($"[BADGE] This badge service may not support PNG format, will show placeholder: {host}");
                     return url; // 返回原URL，但后续会处理为占位符
                 }
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[BADGE] 转换Badge URL到PNG格式失败: {url}, 错误: {ex.Message}");
+                Debug.LogWarning($"[BADGE] Failed to convert badge URL to PNG format: {url}, error: {ex.Message}");
             }
 
             return url; // 转换失败时返回原URL

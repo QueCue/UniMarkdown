@@ -295,7 +295,7 @@ namespace UniMarkdown.Editor
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[EMOJI] 渲染emoji失败: {emoji}, 错误: {ex.Message}");
+                Debug.LogWarning($"[EMOJI] Failed to render emoji: {emoji}, error: {ex.Message}");
                 // 失败时回退到显示原始emoji文本
                 GUILayout.Label(emoji, GUILayout.ExpandWidth(false));
             }
