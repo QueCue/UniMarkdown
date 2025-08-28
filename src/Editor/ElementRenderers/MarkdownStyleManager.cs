@@ -256,8 +256,8 @@ namespace UniMarkdown.Editor
                             padding = new RectOffset(0, 0, 0, 0),
                             margin = new RectOffset(0, 0, 0, EmInt(0.3f, fontSize)),
                             alignment = TextAnchor.LowerLeft,
-                            fixedHeight = fontSize + 5,
-                            stretchHeight = false
+                            stretchHeight = false,
+                            wordWrap = true
                         };
                     }
 
