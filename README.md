@@ -95,29 +95,23 @@
 
 ### 📦 Installation Methods
 
-<details open>
-<summary><strong>🌟 Option A: Unity Package Manager (Recommended)</strong></summary>
+#### 🌟 Option A: Unity Package Manager (Recommended)
 
 1. Open Unity → **Window** → **Package Manager**
 2. Click the **+** button → **"Add package from git URL..."**
 3. Enter: `https://github.com/QueCue/UniMarkdown.git?path=src`
 4. Click **Add** and wait for Unity to import
 
-**✅ Benefits**: Easy updates, clean project structure, automatic dependency management
+**✅ Benefits**: Easy updates, clean project structure, automatic dependency management  
 **🔄 To Update**: Select UniMarkdown in Package Manager → Click **Update**
 
-</details>
-
-<details>
-<summary><strong>Option B: Direct Copy (For custom modifications)</strong></summary>
+#### Option B: Direct Copy (For custom modifications)
 
 1. Download or clone this repository
 2. Copy `src/Editor` folder to `Assets/UniMarkdown/` in your Unity project
 3. Unity will automatically detect and compile the package
 
 **ℹ️ Use case**: When you need to modify the source code directly
-
-</details>
 
 ### 🎯 Quick Usage
 
@@ -135,34 +129,23 @@ Tips: keep GUI paths allocation-free and reuse styles via `MarkdownStyleManager`
 ## Renderer Support Status 🎯
 
 ### ✅ Currently Supported
-<details>
-<summary><strong>Core Elements</strong></summary>
 
+#### Core Elements
 - **Text Formatting**: Text, Bold, Italic, BoldItalic
 - **Headers**: H1-H6 with styling
 - **Line Breaks**: Soft line break / Hard line break
 - **Dividers**: Horizontal rules
 
-</details>
-
-<details>
-<summary><strong>Lists & Navigation</strong></summary>
-
+#### Lists & Navigation
 - **Lists**: Unordered/ordered lists with nesting support
 - **Task Lists**: Interactive checkboxes with nesting
 - **Links**: Internal and external linking
 
-</details>
-
-<details>
-<summary><strong>Rich Content</strong></summary>
-
+#### Rich Content
 - **Images**: Full support with size parameters (`=300x200`, `{width=50%}`)
 - **Code Blocks**: Syntax highlighting (C#/JSON built-in, extensible)
 - **Inline Code**: Styled code snippets
 - **Tables**: Column alignment and formatting
-
-</details>
 
 ### 🚧 Roadmap (Planned Features)
 - **Enhanced Text**: Emoji support, Strikethrough
