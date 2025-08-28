@@ -84,10 +84,10 @@
 | Metric | Status | Details |
 |--------|--------|---------|
 | **Unity Version** | ✅ | 2021.3+ LTS |
-| **Editor Performance** | ⚡ | < 1ms parsing, GC-optimized |
-| **File Size Support** | 📄 | Tested up to 10MB+ documents |
-| **Theme Compatibility** | 🎨 | Auto-adapts to Dark/Light |
-| **Platform Support** | 🖥️ | Editor-only, all Unity platforms |
+| **Editor Performance** | ✅ | < 1ms parsing, GC-optimized |
+| **File Size Support** | ✅ | Tested up to 10MB+ documents |
+| **Theme Compatibility** | ✅ | Auto-adapts to Dark/Light |
+| **Platform Support** | ✅ | Editor-only, all Unity platforms |
 
 </div>
 
