@@ -18,8 +18,8 @@
 </div>
 
 <div align="center">
-  <a href="#安装与快速开始-" style="text-decoration: none;">
-    <img src="https://img.shields.io/badge/Quick%20Start-Get%20Started%20Now-00d9ff?style=for-the-badge&logo=rocket&logoColor=white&labelColor=1a1a2e">
+  <a href="#-unity-package-manager-推荐" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/快速开始-通过%20UPM%20安装-00d9ff?style=for-the-badge&logo=unity&logoColor=white&labelColor=1a1a2e">
   </a>
 </div>
 
@@ -116,9 +116,9 @@
   - 图片（Image，支持尺寸参数）
   - 代码块（CodeBlock：内置 C#/JSON 语法高亮）
   - 行内代码（InlineCode）
+  - 表格（Table，支持列对齐）
 
 - 即将支持（规划）
-  - 表格（Table）
   - Emoji
   - 代码块行号
   - 引用（Blockquote）
