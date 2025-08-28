@@ -44,13 +44,13 @@
 <div align="center">
 
 ### 🎥 Live Demo
-![UniMarkdown Demo](image/preview.gif)
+<img src="image/preview.gif" alt="UniMarkdown Demo" width="600"/>
 
 ### 🌙 Dark Theme
-![Dark Theme Preview](image/preview-dark.png)
+<img src="image/preview-dark.png" alt="Dark Theme Preview" width="500"/>
 
 ### ☀️ Light Theme  
-![Light Theme Preview](image/preview-light.png)
+<img src="image/preview-light.png" alt="Light Theme Preview" width="500"/>
 
 </div>
 

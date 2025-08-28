@@ -46,13 +46,13 @@
 <div align="center">
 
 ### 🎥 动态演示
-![UniMarkdown 演示](image/preview_zh.gif)
+<img src="image/preview_zh.gif" alt="UniMarkdown 演示" width="600"/>
 
 ### 🌙 深色主题
-![深色主题预览](image/preview-dark_zh.png)
+<img src="image/preview-dark_zh.png" alt="深色主题预览" width="500"/>
 
 ### ☀️ 浅色主题  
-![浅色主题预览](image/preview-light_zh.png)
+<img src="image/preview-light_zh.png" alt="浅色主题预览" width="500"/>
 
 </div>
 
