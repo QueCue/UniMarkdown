@@ -39,6 +39,20 @@
 [![Release](https://img.shields.io/github/v/release/OWNER/REPO)](https://github.com/OWNER/REPO/releases)
 -->
 
+## Solving Unity Documentation "Absurd Moments" 😤
+
+Have you ever endured these "absurd moments" with Unity documentation?  
+- Writing a Shader note feels like playing a "window-switching game"—flicking between Unity, VS Code, and Typora, missing the right file three times in a row. (I'm here to develop games, not work as a full-time window switcher!)  
+- The reference images you insert are either so big they take over the screen or so small they turn into pixel blobs. Tweaking their size makes you want to slam your mouse. (Does this image have a mind of its own? Is it that hard to fit properly?)  
+- Collaborating on docs feels like a "file relay race"—you send Version 2, someone edits Version 3, and soon your folder is stuffed with "Note V1 to V8." No one knows which is the latest. (This isn't documentation—it's a "document family pack"!)  
+- You try adding a table to record parameters, but the columns are as lopsided as a wind-tousled fence. Fixing alignment takes 10 minutes—harder than teaching a newbie to tweak a Shader. (Is a neat table really that much to ask for?)  
+- And the most frustrating one: You stay up late writing *Character Skill Logic.md*, but when the game designer opens it, they're staring at a screen full of `# * - |` like it's Morse code. Finally, they hold up their phone and ask: "Am I supposed to decode this?" (I wrote a document, not an encrypted telegram!)  
+
+UniMarkdown is built specifically to solve these documentation headaches for Unity developers. As a **Unity-native Markdown toolkit**, it doesn't just let you double-click to open .md files directly in the Editor—it also renders them in real time into a "symbol-free, clean version" (headings auto-bolded, tables neatly aligned, images clearly displayed). Most importantly:  
+Even non-technical teammates (who know nothing about Markdown) can understand the well-formatted docs just by opening Unity. No extra software to install, no syntax to learn—goodbye to the communication waste where "you write it for nothing, they read it for nothing."  
+
+From "you write comfortably but others can't understand" to "the whole team reads easily," UniMarkdown turns documentation into a collaboration booster—instead of a barrier between departments.
+
 ## Demo & Screenshots 🖼️
 
 <div align="center">
