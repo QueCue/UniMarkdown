@@ -19,14 +19,37 @@ namespace UniMarkdown.Editor
         public override int Priority => 10;
 
         /// <summary>
-        /// 渲染文本元素 - 完全提取自MarkdownRenderer.RenderText
+        /// 渲染文本元素 - 使用上下文感知的智能换行控制
         /// </summary>
         /// <param name="element">文本元素</param>
         /// <param name="isInline">是否为行内元素</param>
         protected override void OnRender(MarkdownElement element, bool isInline)
         {
-            GUIStyle textStyle = GetTextStyle();
-            GUILayoutOption[] options = isInline ? GetInlineOptions() : null;
+            // 使用上下文感知的文本样式：
+            // - 混合行内元素上下文：禁用自动换行，保持行内流式布局
+            // - 纯文本上下文：启用自动换行，允许长文本自动折行
+            GUIStyle textStyle = GetTextStyleForContext(element.isInMixedInlineContext);
+            
+            // 根据上下文调整布局选项
+            GUILayoutOption[] options;
+            if (isInline)
+            {
+                if (element.isInMixedInlineContext)
+                {
+                    // 混合上下文：使用紧凑布局
+                    options = GetInlineOptions(); // ExpandWidth(false)
+                }
+                else
+                {
+                    // 纯文本上下文：允许扩展宽度以支持换行
+                    options = new[] { GUILayout.ExpandWidth(true) };
+                }
+            }
+            else
+            {
+                options = null;
+            }
+            
             GUILayout.Label(element.content, textStyle, options);
             //EditorGUI.DrawRect(GUILayoutUtility.GetLastRect(), new Color(1f, 1f, 0.5f, 0.3f)); // 区域绘制-调试专用
         }

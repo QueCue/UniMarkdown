@@ -54,6 +54,7 @@ namespace UniMarkdown.Editor
         private GUIStyle m_taskCheckboxStyle; // 任务勾选框样式
         private GUIStyle m_taskContentStyle; // 任务内容样式
         private GUIStyle m_textStyle;
+        private GUIStyle m_inlineTextStyle; // 行内文本样式
         private GUIStyle m_unorderedListBulletStyle;
         
         // 表格相关样式
@@ -165,9 +166,35 @@ namespace UniMarkdown.Editor
         // 公共样式访问接口 - 按需初始化
 
         /// <summary>
-        /// 获取文本样式
+        /// 获取文本样式（已弃用，请使用GetTextStyleForContext）
         /// </summary>
+        [System.Obsolete("请使用GetTextStyleForContext(bool isInMixedContext)以获得更好的换行控制")]
         public GUIStyle GetTextStyle()
+        {
+            return GetTextStyleForContext(false);
+        }
+
+        /// <summary>
+        /// 根据上下文获取合适的文本样式
+        /// </summary>
+        /// <param name="isInMixedContext">是否在混合行内元素上下文中</param>
+        /// <returns>适合当前上下文的文本样式</returns>
+        public GUIStyle GetTextStyleForContext(bool isInMixedContext)
+        {
+            if (isInMixedContext)
+            {
+                return GetInlineTextStyle();
+            }
+            else
+            {
+                return GetBlockTextStyle();
+            }
+        }
+
+        /// <summary>
+        /// 获取块级文本样式（用于纯文本行，支持自动换行）
+        /// </summary>
+        private GUIStyle GetBlockTextStyle()
         {
             if (m_textStyle == null)
             {
@@ -177,11 +204,34 @@ namespace UniMarkdown.Editor
                     fontSize = EmInt(1),
                     normal = { textColor = TextColor },
                     padding = new RectOffset(0, 0, 0, 0),
-                    margin = new RectOffset(0, 0, 0, 0)
+                    margin = new RectOffset(0, 0, 0, 0),
+                    wordWrap = true
                 };
             }
 
             return m_textStyle;
+        }
+
+        /// <summary>
+        /// 获取行内文本样式（用于混合元素行，禁用自动换行）
+        /// </summary>
+        private GUIStyle GetInlineTextStyle()
+        {
+            if (m_inlineTextStyle == null)
+            {
+                m_inlineTextStyle = new GUIStyle(EditorStyles.label)
+                {
+                    font = m_monoFont,
+                    fontSize = EmInt(1),
+                    normal = { textColor = TextColor },
+                    padding = new RectOffset(0, 0, 0, 0),
+                    margin = new RectOffset(0, 0, 0, 0),
+                    wordWrap = false,
+                    alignment = TextAnchor.MiddleLeft
+                };
+            }
+
+            return m_inlineTextStyle;
         }
 
         /// <summary>

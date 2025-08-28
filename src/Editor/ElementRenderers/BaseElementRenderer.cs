@@ -82,6 +82,15 @@ namespace UniMarkdown.Editor
         }
 
         /// <summary>
+        /// 根据上下文获取合适的文本样式
+        /// </summary>
+        /// <param name="isInMixedContext">是否在混合行内元素上下文中</param>
+        protected GUIStyle GetTextStyleForContext(bool isInMixedContext)
+        {
+            return MarkdownStyleManager.Inst.GetTextStyleForContext(isInMixedContext);
+        }
+
+        /// <summary>
         /// 获取指定级别的标题样式
         /// </summary>
         /// <param name="level">标题级别 (1-6)</param>

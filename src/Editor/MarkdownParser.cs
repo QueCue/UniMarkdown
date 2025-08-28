@@ -344,6 +344,9 @@ namespace UniMarkdown.Editor
 
                 ParseInlineElements(processedLine, result);
 
+                // 智能换行控制：检测并标记混合行内元素上下文
+                MarkMixedInlineContext(result, elementCountBefore);
+
                 // 根据Markdown规则处理换行
                 if (result.Count > elementCountBefore &&
                     i < lines.Length - 1)
@@ -975,6 +978,52 @@ namespace UniMarkdown.Editor
                     // 没有明确指定对齐方式，使用空字符串，这样渲染器会使用默认的居中对齐
                     alignment.Add("");
                 }
+            }
+        }
+
+        /// <summary>
+        /// 智能换行控制：检测并标记混合行内元素上下文
+        /// 用于解决行内元素自动换行显示异常的问题
+        /// </summary>
+        /// <param name="result">元素列表</param>
+        /// <param name="startIndex">本行元素的起始索引</param>
+        private static void MarkMixedInlineContext(List<MarkdownElement> result, int startIndex)
+        {
+            if (result.Count <= startIndex)
+            {
+                return; // 没有新增元素，无需处理
+            }
+
+            // 分析当前行的元素类型组合
+            bool hasText = false;
+            bool hasOtherInlineElements = false;
+            int elementCount = result.Count - startIndex;
+
+            for (int i = startIndex; i < result.Count; i++)
+            {
+                MarkdownElement element = result[i];
+                switch (element.elementType)
+                {
+                    case MarkdownElementType.Text:
+                        hasText = true;
+                        break;
+                    case MarkdownElementType.InlineCode:
+                    case MarkdownElementType.Link:
+                    case MarkdownElementType.Bold:
+                    case MarkdownElementType.Italic:
+                    case MarkdownElementType.BoldItalic:
+                        hasOtherInlineElements = true;
+                        break;
+                }
+            }
+
+            // 判断是否为混合行内元素上下文
+            bool isMixedContext = hasText && hasOtherInlineElements && elementCount > 1;
+
+            // 标记当前行的所有元素
+            for (int i = startIndex; i < result.Count; i++)
+            {
+                result[i].isInMixedInlineContext = isMixedContext;
             }
         }
     }

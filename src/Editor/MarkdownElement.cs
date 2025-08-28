@@ -116,6 +116,9 @@ namespace UniMarkdown.Editor
         public List<List<string>> tableRows; // 表格行数据，每行包含多个单元格
         public List<string> tableAlignment; // 表格列对齐方式："left", "center", "right"
 
+        // 上下文相关字段
+        public bool isInMixedInlineContext; // 是否在混合行内元素上下文中（用于智能换行控制）
+
         /// <summary>
         /// 私有构造函数，强制使用对象池
         /// </summary>
@@ -176,6 +179,9 @@ namespace UniMarkdown.Editor
             // 重置表格字段
             tableRows?.Clear();
             tableAlignment?.Clear();
+
+            // 重置上下文字段
+            isInMixedInlineContext = false;
         }
 
         /// <summary>
