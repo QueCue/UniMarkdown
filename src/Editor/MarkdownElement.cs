@@ -77,7 +77,12 @@ namespace UniMarkdown.Editor
         /// <summary>
         /// 待办事项（任务列表）
         /// </summary>
-        TaskList
+        TaskList,
+
+        /// <summary>
+        /// 表格
+        /// </summary>
+        Table
     }
 
     /// <summary>
@@ -106,6 +111,10 @@ namespace UniMarkdown.Editor
         public float imageWidth; // 图片宽度，-1表示使用原始尺寸
         public float imageHeight; // 图片高度，-1表示使用原始尺寸
         public bool imageIsPercentage; // 是否为百分比尺寸
+
+        // 表格相关字段
+        public List<List<string>> tableRows; // 表格行数据，每行包含多个单元格
+        public List<string> tableAlignment; // 表格列对齐方式："left", "center", "right"
 
         /// <summary>
         /// 私有构造函数，强制使用对象池
@@ -163,6 +172,10 @@ namespace UniMarkdown.Editor
             imageWidth = -1;
             imageHeight = -1;
             imageIsPercentage = false;
+
+            // 重置表格字段
+            tableRows?.Clear();
+            tableAlignment?.Clear();
         }
 
         /// <summary>
@@ -288,6 +301,55 @@ namespace UniMarkdown.Editor
         {
             elementType = MarkdownElementType.Divide;
             content = "---"; // 标准分割线表示
+        }
+
+        /// <summary>
+        /// 设置表格元素
+        /// </summary>
+        /// <param name="rows">表格行数据</param>
+        /// <param name="alignment">列对齐方式</param>
+        public void SetTable(List<List<string>> rows, List<string> alignment = null)
+        {
+            elementType = MarkdownElementType.Table;
+            
+            // 初始化表格数据
+            if (tableRows == null)
+            {
+                tableRows = new List<List<string>>();
+            }
+            else
+            {
+                tableRows.Clear();
+            }
+
+            if (tableAlignment == null)
+            {
+                tableAlignment = new List<string>();
+            }
+            else
+            {
+                tableAlignment.Clear();
+            }
+
+            // 复制表格数据
+            if (rows != null)
+            {
+                for (var i = 0; i < rows.Count; i++)
+                {
+                    var row = new List<string>();
+                    if (rows[i] != null)
+                    {
+                        row.AddRange(rows[i]);
+                    }
+                    tableRows.Add(row);
+                }
+            }
+
+            // 复制对齐方式
+            if (alignment != null)
+            {
+                tableAlignment.AddRange(alignment);
+            }
         }
     }
 }

@@ -55,6 +55,7 @@ namespace UniMarkdown.Editor
             RegisterRenderer<DivideElementRenderer>(MarkdownElementType.Divide);
             RegisterRenderer<SoftLineBreakElementRenderer>(MarkdownElementType.SoftLineBreak);
             RegisterRenderer<LineBreakElementRenderer>(MarkdownElementType.LineBreak);
+            RegisterRenderer<TableElementRenderer>(MarkdownElementType.Table);
         }
 
         /// <summary>

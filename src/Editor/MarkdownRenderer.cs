@@ -257,7 +257,8 @@ namespace UniMarkdown.Editor
                 element.elementType == MarkdownElementType.CodeBlock ||
                 element.elementType == MarkdownElementType.Image ||
                 element.elementType == MarkdownElementType.ListItem ||
-                element.elementType == MarkdownElementType.TaskList;
+                element.elementType == MarkdownElementType.TaskList ||
+                element.elementType == MarkdownElementType.Table;
         }
 
         /// <summary>

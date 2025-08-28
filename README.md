@@ -145,7 +145,7 @@ Tips: keep GUI paths allocation-free and reuse styles via `MarkdownStyleManager`
 - **Images**: Full support with size parameters (`=300x200`, `{width=50%}`)
 - **Code Blocks**: Syntax highlighting (C#/JSON built-in, extensible)
 - **Inline Code**: Styled code snippets
-- **Tables**: Column alignment and formatting
+- **Tables**: Complete table rendering with column alignment, header styling, borders, and responsive layout
 
 ### 🚧 Roadmap (Planned Features)
 - **Enhanced Text**: Emoji support, Strikethrough
@@ -168,7 +168,7 @@ We welcome contributions from the community! Here's how you can help:
 
 - **Changelog**: [`CHANGELOG.md`](./CHANGELOG.md) | [`CHANGELOG.zh.md`](./CHANGELOG.zh.md)
 - **License**: [MIT License](./LICENSE)
-- **Version**: `0.1.0-Preview` (Unity 2021.3+)
+- **Version**: `0.2.0-Preview` (Unity 2021.3+)
 
 ---
 

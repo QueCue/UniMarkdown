@@ -1,10 +1,10 @@
 {
   "name": "com.quecue.unimarkdown",
   "displayName": "UniMarkdown",
-  "version": "0.1.0-Preview",
+  "version": "0.2.0-Preview",
   "unity": "2021.3",
   "description": "The ultimate native Markdown toolkit for Unity. Edit, preview, and manage docs seamlessly inside the editor.",
-  "keywords": ["markdown", "editor", "inspector", "syntax", "highlighting"],
+  "keywords": ["markdown", "editor", "inspector", "syntax", "highlighting", "table", "responsive"],
   "author": {
     "name": "QueCue"
   },

@@ -26,6 +26,11 @@ namespace UniMarkdown.Editor
         public Color LinkHoverColor { get; private set; }
         public Color SecondaryTextColor; // 次要文本颜色（用于已完成任务 { get; private set; }
         public Color TextColor { get; private set; }
+        
+        // 表格相关颜色
+        public Color TableHeaderBackground { get; private set; }
+        public Color TableBorderColor { get; private set; }
+        public Color TableThickBorderColor { get; private set; }
 
         // 基础配置缓存
         private Font m_monoFont;
@@ -50,6 +55,11 @@ namespace UniMarkdown.Editor
         private GUIStyle m_taskContentStyle; // 任务内容样式
         private GUIStyle m_textStyle;
         private GUIStyle m_unorderedListBulletStyle;
+        
+        // 表格相关样式
+        private GUIStyle m_tableContainerStyle; // 表格容器样式
+        private GUIStyle m_tableHeaderStyle; // 表格表头样式
+        private GUIStyle m_tableCellStyle; // 表格单元格样式
 
         /// <summary>
         /// 单例实例
@@ -103,6 +113,11 @@ namespace UniMarkdown.Editor
                 LinkColor = new Color(0.267f, 0.576f, 0.973f, 1f); // GitHub链接蓝色 (#4493f8)
                 LinkHoverColor = new Color(0.267f, 0.576f, 0.973f, 1f); // GitHub悬停蓝色 (#4493f8)
                 SecondaryTextColor = new Color(0.7f, 0.7f, 0.7f, 1f); // 已完成任务的次要文本颜色
+                
+                // 表格颜色 - Dark Theme
+                TableHeaderBackground = new Color(0.25f, 0.25f, 0.25f, 0.8f);
+                TableBorderColor = new Color(0.4f, 0.4f, 0.4f, 0.6f);
+                TableThickBorderColor = new Color(0.5f, 0.5f, 0.5f, 0.9f);
             }
             else
             {
@@ -118,6 +133,11 @@ namespace UniMarkdown.Editor
                 LinkColor = new Color32(9, 105, 218, 255); // GitHub链接蓝色 (#4493f8)
                 LinkHoverColor = new Color32(9, 105, 218, 255); // GitHub链接蓝色 (#4493f8)
                 SecondaryTextColor = new Color(0.5f, 0.5f, 0.5f, 1f); // 已完成任务的次要文本颜色
+                
+                // 表格颜色 - Light Theme
+                TableHeaderBackground = new Color(0.95f, 0.95f, 0.95f, 1f);
+                TableBorderColor = new Color(0.7f, 0.7f, 0.7f, 0.8f);
+                TableThickBorderColor = new Color(0.6f, 0.6f, 0.6f, 1f);
             }
         }
 
@@ -604,6 +624,74 @@ namespace UniMarkdown.Editor
             }
 
             return m_scrollViewBackgroundStyle;
+        }
+
+        /// <summary>
+        /// 获取表格容器样式
+        /// </summary>
+        /// <returns>表格容器样式</returns>
+        public GUIStyle GetTableContainerStyle()
+        {
+            if (m_tableContainerStyle == null)
+            {
+                m_tableContainerStyle = new GUIStyle
+                {
+                    padding = new RectOffset(0, 0, EmInt(0.3f), EmInt(0.3f)), // 使用合理的容器内边距
+                    margin = new RectOffset(0, 0, EmInt(0.3f), EmInt(0.3f))   // 使用合理的容器外边距
+                    // 移除背景色，避免影响布局
+                };
+            }
+
+            return m_tableContainerStyle;
+        }
+
+        /// <summary>
+        /// 获取表格表头样式
+        /// </summary>
+        /// <returns>表格表头样式</returns>
+        public GUIStyle GetTableHeaderStyle()
+        {
+            if (m_tableHeaderStyle == null)
+            {
+                m_tableHeaderStyle = new GUIStyle(EditorStyles.label)
+                {
+                    fontSize = EmInt(0.875f), // 表头使用0.875em = 14px
+                    fontStyle = FontStyle.Bold,
+                    font = EditorStyles.label.font, // 确保使用正确的字体
+                    alignment = TextAnchor.MiddleLeft,
+                    padding = new RectOffset(EmInt(0.75f), EmInt(0.75f), EmInt(0.5f), EmInt(0.5f)), // 修复padding大小
+                    margin = new RectOffset(0, 0, 0, 0),
+                    wordWrap = false,
+                    normal = { textColor = HeaderColor },
+                    richText = true
+                };
+            }
+
+            return m_tableHeaderStyle;
+        }
+
+        /// <summary>
+        /// 获取表格单元格样式
+        /// </summary>
+        /// <returns>表格单元格样式</returns>
+        public GUIStyle GetTableCellStyle()
+        {
+            if (m_tableCellStyle == null)
+            {
+                m_tableCellStyle = new GUIStyle(EditorStyles.label)
+                {
+                    fontSize = EmInt(0.875f), // 单元格使用0.875em = 14px
+                    font = EditorStyles.label.font, // 确保使用正确的字体
+                    alignment = TextAnchor.MiddleLeft,
+                    padding = new RectOffset(EmInt(0.75f), EmInt(0.75f), EmInt(0.5f), EmInt(0.5f)), // 修复padding大小
+                    margin = new RectOffset(0, 0, 0, 0),
+                    wordWrap = false,
+                    normal = { textColor = TextColor },
+                    richText = true
+                };
+            }
+
+            return m_tableCellStyle;
         }
     }
 }

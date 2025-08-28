@@ -67,6 +67,14 @@ namespace UniMarkdown.Editor
         private static readonly Regex g_divideRegex = new Regex(@"^[\s]*(-{3,}|\*{3,}|_{3,})[\s]*$",
             RegexOptions.Multiline | RegexOptions.Compiled);
 
+        // 表格行正则：匹配以|分隔的表格行
+        private static readonly Regex g_tableRowRegex = new Regex(@"^\s*\|(.+)\|\s*$",
+            RegexOptions.Compiled);
+
+        // 表格分隔行正则：匹配表格标题与内容的分隔行
+        private static readonly Regex g_tableSeparatorRegex = new Regex(@"^\s*\|(\s*:?-+:?\s*\|)+\s*$",
+            RegexOptions.Compiled);
+
         // 复用StringBuilder减少内存分配
         private static readonly StringBuilder g_stringBuilder = new StringBuilder(1024);
 
@@ -290,6 +298,16 @@ namespace UniMarkdown.Editor
                         orderedNestingLevel);
 
                     result.Add(listElement);
+                    continue;
+                }
+
+                // 处理表格 - 检查当前行是否为表格行
+                if (TryParseTable(lines, i, out var table, out int consumedLines))
+                {
+                    // 重置有序列表序号（遇到表格时）
+                    orderedListCounters.Clear();
+                    result.Add(table);
+                    i += consumedLines - 1; // 跳过已处理的行（-1是因为for循环会自动+1）
                     continue;
                 }
 
@@ -814,6 +832,149 @@ namespace UniMarkdown.Editor
                 }
 
                 matches.Add((match.Index, match.Length, element));
+            }
+        }
+
+        /// <summary>
+        /// 尝试解析表格
+        /// </summary>
+        /// <param name="lines">所有行</param>
+        /// <param name="startIndex">起始行索引</param>
+        /// <param name="table">解析出的表格元素</param>
+        /// <param name="consumedLines">消耗的行数</param>
+        /// <returns>是否成功解析为表格</returns>
+        private static bool TryParseTable(string[] lines, int startIndex, out MarkdownElement table, out int consumedLines)
+        {
+            table = null;
+            consumedLines = 0;
+            if (startIndex >= lines.Length)
+            {
+                return false;
+            }
+
+            var currentLine = lines[startIndex].Trim();
+            // 检查第一行是否为表格行 - 简化检查
+            if (!currentLine.StartsWith("|") || !currentLine.EndsWith("|"))
+            {
+                return false;
+            }
+
+            // 检查第二行是否为表格分隔行
+            if (startIndex + 1 >= lines.Length)
+            {
+                return false;
+            }
+
+            var separatorLine = lines[startIndex + 1].Trim();
+            if (!separatorLine.StartsWith("|") || !separatorLine.EndsWith("|") || !separatorLine.Contains("-"))
+            {
+                return false;
+            }
+
+            var tableRows = new List<List<string>>();
+            var tableAlignment = new List<string>();
+
+            // 解析表头行
+            var headerCells = ParseTableRowSimple(lines[startIndex]);
+            if (headerCells.Count == 0)
+            {
+                return false;
+            }
+            tableRows.Add(headerCells);
+
+            // 解析分隔行获取对齐信息
+            ParseTableAlignmentSimple(lines[startIndex + 1], tableAlignment);
+            consumedLines = 2;
+
+            // 解析数据行
+            for (var i = startIndex + 2; i < lines.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(lines[i]))
+                {
+                    break; // 遇到空行结束表格
+                }
+
+                var line = lines[i].Trim();
+                if (!line.StartsWith("|") || !line.EndsWith("|"))
+                {
+                    break; // 不再是表格行，结束解析
+                }
+
+                var dataCells = ParseTableRowSimple(lines[i]);
+                if (dataCells.Count == 0)
+                {
+                    break;
+                }
+
+                tableRows.Add(dataCells);
+                consumedLines++;
+            }
+
+            // 创建表格元素
+            table = MarkdownElement.GetFromPool();
+            table.SetTable(tableRows, tableAlignment);
+            return true;
+        }
+
+        /// <summary>
+        /// 解析表格行，提取单元格内容 - 简化版本
+        /// </summary>
+        /// <param name="line">表格行</param>
+        /// <returns>单元格内容列表</returns>
+        private static List<string> ParseTableRowSimple(string line)
+        {
+            var cells = new List<string>();
+            
+            // 去掉首尾的 | 字符
+            var trimmed = line.Trim();
+            if (trimmed.StartsWith("|"))
+            {
+                trimmed = trimmed.Substring(1);
+            }
+            if (trimmed.EndsWith("|"))
+            {
+                trimmed = trimmed.Substring(0, trimmed.Length - 1);
+            }
+
+            // 按 | 分割并去除空白
+            var cellArray = trimmed.Split('|');
+            foreach (var cell in cellArray)
+            {
+                cells.Add(cell.Trim());
+            }
+
+            return cells;
+        }
+
+        /// <summary>
+        /// 解析表格对齐信息 - 简化版本
+        /// </summary>
+        /// <param name="separatorLine">分隔行</param>
+        /// <param name="alignment">对齐信息列表</param>
+        private static void ParseTableAlignmentSimple(string separatorLine, List<string> alignment)
+        {
+            var cells = ParseTableRowSimple(separatorLine);
+            
+            foreach (var cell in cells)
+            {
+                var trimmed = cell.Trim();
+                if (trimmed.StartsWith(":") && trimmed.EndsWith(":"))
+                {
+                    alignment.Add("center");
+                }
+                else if (trimmed.EndsWith(":"))
+                {
+                    alignment.Add("right");
+                }
+                else if (trimmed.StartsWith(":"))
+                {
+                    alignment.Add("left");
+                }
+                else
+                {
+                    // 没有明确指定对齐方式，使用空字符串，这样渲染器会使用默认的居中对齐
+                    alignment.Add("");
+                }
             }
         }
     }

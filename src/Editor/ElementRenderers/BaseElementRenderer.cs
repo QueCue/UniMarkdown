@@ -177,6 +177,30 @@ namespace UniMarkdown.Editor
             return MarkdownStyleManager.Inst.GetInlineOptions();
         }
 
+        /// <summary>
+        /// 获取表格容器样式
+        /// </summary>
+        protected GUIStyle GetTableContainerStyle()
+        {
+            return MarkdownStyleManager.Inst.GetTableContainerStyle();
+        }
+
+        /// <summary>
+        /// 获取表格表头样式
+        /// </summary>
+        protected GUIStyle GetTableHeaderStyle()
+        {
+            return MarkdownStyleManager.Inst.GetTableHeaderStyle();
+        }
+
+        /// <summary>
+        /// 获取表格单元格样式
+        /// </summary>
+        protected GUIStyle GetTableCellStyle()
+        {
+            return MarkdownStyleManager.Inst.GetTableCellStyle();
+        }
+
         protected void RenderElement(MarkdownElement element, bool isInline)
         {
             m_rendererMgr.RenderElement(element, isInline);
