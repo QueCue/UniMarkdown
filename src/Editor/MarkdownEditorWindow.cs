@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,7 +11,7 @@ namespace UniMarkdown.Editor
     public sealed class MarkdownEditorWindow : EditorWindow
     {
         private const string g_windowTitle = "Markdown Editor";
-        private const string g_defaultFilePath = "Assets/StreamingAssets/Examples/sample.md";
+        private const string g_defaultFilePath = "Assets/TestFiles/sample_en.md";
 
         [SerializeField]
         private string m_currentFilePath;
@@ -140,82 +139,6 @@ namespace UniMarkdown.Editor
             var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
             window.LoadMarkdownFile(g_defaultFilePath);
             window.Show();
-        }
-
-        /// <summary>
-        /// 加载C#语法高亮测试文件的菜单项
-        /// </summary>
-        [MenuItem("UniMarkdown/Markdown Editor/Test C# Syntax Highlighting")]
-        public static void LoadCSharpSyntaxTest()
-        {
-            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
-            var testFilePath = "Assets/StreamingAssets/Examples/csharp_sample.md";
-            window.LoadMarkdownFile(testFilePath);
-            window.Show();
-        }
-
-        /// <summary>
-        /// 加载C#语法高亮测试文件的菜单项
-        /// </summary>
-        [MenuItem("UniMarkdown/Markdown Editor/Test C# Syntax Highlighting 2")]
-        public static void LoadCSharpSyntaxTest2()
-        {
-            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
-            var testFilePath = "Assets/StreamingAssets/Examples/csharp_sample copy.md";
-            window.LoadMarkdownFile(testFilePath);
-            window.Show();
-        }
-
-        /// <summary>
-        /// 测试ListContainer功能的菜单项
-        /// </summary>
-        [MenuItem("UniMarkdown/Markdown Editor/Test List Container")]
-        public static void LoadListContainerTest()
-        {
-            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
-            var testFilePath = "Assets/StreamingAssets/Examples/list_container_test.md";
-            window.LoadMarkdownFile(testFilePath);
-            window.Show();
-        }
-
-        /// <summary>
-        /// 测试Badge渲染功能的菜单项
-        /// </summary>
-        [MenuItem("UniMarkdown/Markdown Editor/Test Badge Rendering")]
-        public static void LoadBadgeTest()
-        {
-            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
-            var testFilePath = "Assets/StreamingAssets/Examples/badge_test.md";
-            window.LoadMarkdownFile(testFilePath);
-            window.Show();
-        }
-
-        /// <summary>
-        /// 测试Emoji渲染功能的菜单项
-        /// </summary>
-        [MenuItem("UniMarkdown/Markdown Editor/Test Emoji Rendering")]
-        public static void LoadEmojiTest()
-        {
-            var window = GetWindow<MarkdownEditorWindow>(g_windowTitle);
-            var testFilePath = "unity_project_document/emoji_test.md";
-            window.LoadMarkdownFile(testFilePath);
-            window.Show();
-        }
-
-        [MenuItem("UniMarkdown/ResetStyle #&r")] // Ctrl+Alt+R 快捷键
-        private static void ResetStyle()
-        {
-            FieldInfo s
-                = typeof(MarkdownStyleManager).GetField("g_inst",
-                    BindingFlags.Static | BindingFlags.NonPublic);
-
-            if (null == s)
-            {
-                return;
-            }
-
-            s.SetValue(null, null);
-            Debug.LogError("[MarkdownEditor] Styles reset. Changes will take effect when editor reopens");
         }
 
         /// <summary>
