@@ -24,6 +24,10 @@ namespace UniMarkdown.Editor
         private MarkdownRenderer m_markdownRenderer;
         private string m_assetPath;
 
+        // 性能优化缓存
+        private string m_cachedMarkdownContent;
+        private int m_lastRepaintFrame;
+
         private void Awake()
         {
             // 从EditorPrefs读取设置
@@ -98,7 +102,7 @@ namespace UniMarkdown.Editor
                 }
                 else
                 {
-                    m_scrollPosition = m_markdownRenderer.RenderMarkdown(textAsset.text, m_scrollPosition);
+                    RenderMarkdownOptimized(textAsset.text);
                 }
             }
 
@@ -158,6 +162,46 @@ namespace UniMarkdown.Editor
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.EndVertical();
+        }
+
+        /// <summary>
+        /// 优化的 Markdown 渲染方法，减少不必要的重绘
+        /// </summary>
+        /// <param name="markdownText">Markdown 文本内容</param>
+        private void RenderMarkdownOptimized(string markdownText)
+        {
+            // 检查内容是否发生变化
+            bool contentChanged = m_cachedMarkdownContent != markdownText;
+            
+            // 检查是否需要重新渲染（内容变化或强制刷新）
+            bool shouldRender = contentChanged || ShouldForceRepaint();
+            
+            if (contentChanged)
+            {
+                m_cachedMarkdownContent = markdownText;
+            }
+            
+            if (shouldRender)
+            {
+                m_lastRepaintFrame = Time.frameCount;
+            }
+            
+            // 执行渲染
+            m_scrollPosition = m_markdownRenderer.RenderMarkdown(markdownText, m_scrollPosition);
+        }
+
+        /// <summary>
+        /// 判断是否需要强制重绘
+        /// </summary>
+        /// <returns>是否需要强制重绘</returns>
+        private bool ShouldForceRepaint()
+        {
+            // 避免连续帧的重复渲染，限制最大重绘频率
+            int currentFrame = Time.frameCount;
+            int framesSinceLastRepaint = currentFrame - m_lastRepaintFrame;
+            
+            // 最多每 3 帧渲染一次，除非内容有变化
+            return framesSinceLastRepaint >= 3;
         }
     }
 }

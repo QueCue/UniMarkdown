@@ -27,6 +27,10 @@ namespace UniMarkdown.Editor
         private string m_markdownContent;
         private Vector2 m_editScrollPosition;
 
+        // 性能优化缓存
+        private string m_cachedPreviewContent;
+        private int m_lastPreviewFrame;
+
         /// <summary>
         /// 窗口初始化
         /// </summary>
@@ -231,9 +235,8 @@ namespace UniMarkdown.Editor
             }
             else
             {
-                // 使用渲染器直接渲染Markdown文本
-                m_viewScrollPosition = m_markdownRenderer.RenderMarkdown(m_markdownContent,
-                    m_viewScrollPosition);
+                // 使用优化的渲染方法
+                RenderPreviewOptimized();
             }
         }
 
@@ -348,9 +351,51 @@ namespace UniMarkdown.Editor
             {
                 case PlayModeStateChange.EnteredEditMode:
                     m_markdownRenderer.Reset();
+                    // 重置缓存
+                    m_cachedPreviewContent = null;
+                    m_lastPreviewFrame = 0;
                     Repaint();
                     break;
             }
+        }
+
+        /// <summary>
+        /// 优化的预览渲染方法，减少不必要的重绘
+        /// </summary>
+        private void RenderPreviewOptimized()
+        {
+            // 检查内容是否发生变化
+            bool contentChanged = m_cachedPreviewContent != m_markdownContent;
+            
+            // 检查是否需要重新渲染（内容变化或强制刷新）
+            bool shouldRender = contentChanged || ShouldForcePreviewRepaint();
+            
+            if (contentChanged)
+            {
+                m_cachedPreviewContent = m_markdownContent;
+            }
+            
+            if (shouldRender)
+            {
+                m_lastPreviewFrame = Time.frameCount;
+            }
+            
+            // 执行渲染
+            m_viewScrollPosition = m_markdownRenderer.RenderMarkdown(m_markdownContent, m_viewScrollPosition);
+        }
+
+        /// <summary>
+        /// 判断是否需要强制重绘预览
+        /// </summary>
+        /// <returns>是否需要强制重绘</returns>
+        private bool ShouldForcePreviewRepaint()
+        {
+            // 避免连续帧的重复渲染，限制最大重绘频率
+            int currentFrame = Time.frameCount;
+            int framesSinceLastRepaint = currentFrame - m_lastPreviewFrame;
+            
+            // 编辑器窗口可以稍微频繁一些，最多每 2 帧渲染一次
+            return framesSinceLastRepaint >= 2;
         }
     }
 }

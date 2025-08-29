@@ -11,6 +11,10 @@ namespace UniMarkdown.Editor
     /// </summary>
     public sealed class MarkdownRenderer : IDisposable
     {
+        // 对象池 - 用于 GroupInlineElements 性能优化
+        private static readonly Queue<List<List<MarkdownElement>>> g_groupsPool = new Queue<List<List<MarkdownElement>>>();
+        private static readonly Queue<List<MarkdownElement>> g_groupPool = new Queue<List<MarkdownElement>>();
+
         // 元素渲染器工厂
         private ElementRendererFactory m_rendererFactory;
 
@@ -23,6 +27,10 @@ namespace UniMarkdown.Editor
         // 缓存滚动位置
         private Vector2 m_scrollPosition;
 
+        // 渲染分组缓存 - 避免每帧重新计算 GroupInlineElements
+        private List<List<MarkdownElement>> m_cachedGroups;
+        private int m_cachedElementsHash;
+
         /// <summary>
         /// 私有构造函数
         /// </summary>
@@ -31,6 +39,8 @@ namespace UniMarkdown.Editor
             m_rendererFactory = new ElementRendererFactory(this);
             m_markdownElements = new List<MarkdownElement>();
             m_cachedMarkdownContent = string.Empty;
+            m_cachedGroups = null;
+            m_cachedElementsHash = 0;
         }
 
         public void Dispose()
@@ -48,6 +58,11 @@ namespace UniMarkdown.Editor
                 m_markdownElements.Clear();
                 m_markdownElements = null;
             }
+
+            // 清理分组缓存
+            ReturnGroupsToPool();
+
+            m_rendererFactory = null;
         }
 
         /// <summary>
@@ -73,6 +88,10 @@ namespace UniMarkdown.Editor
 
                 m_markdownElements.Clear();
             }
+
+            // 清理分组缓存
+            ReturnGroupsToPool();
+            m_cachedElementsHash = 0;
 
             m_cachedMarkdownContent = string.Empty;
         }
@@ -118,8 +137,8 @@ namespace UniMarkdown.Editor
 
             try
             {
-                // 合并同一行的内联元素
-                List<List<MarkdownElement>> groupedElements = GroupInlineElements(elements);
+                // 使用缓存的分组元素，避免每帧重新计算
+                List<List<MarkdownElement>> groupedElements = GetCachedGroupedElements(elements);
                 for (var i = 0; i < groupedElements.Count; i++)
                 {
                     List<MarkdownElement> group = groupedElements[i];
@@ -188,7 +207,147 @@ namespace UniMarkdown.Editor
         }
 
         /// <summary>
-        /// 将内联元素分组
+        /// 获取缓存的分组元素，避免每帧重新计算
+        /// </summary>
+        /// <param name="elements">元素列表</param>
+        /// <returns>分组后的元素列表</returns>
+        private List<List<MarkdownElement>> GetCachedGroupedElements(List<MarkdownElement> elements)
+        {
+            // 计算元素列表的哈希值
+            int currentHash = ComputeElementsHash(elements);
+            
+            // 检查是否需要重新分组
+            if (m_cachedGroups == null || m_cachedElementsHash != currentHash)
+            {
+                // 归还之前的缓存到对象池
+                ReturnGroupsToPool();
+                
+                // 重新分组
+                m_cachedGroups = GroupInlineElementsOptimized(elements);
+                m_cachedElementsHash = currentHash;
+            }
+            
+            return m_cachedGroups;
+        }
+
+        /// <summary>
+        /// 计算元素列表的简单哈希值
+        /// </summary>
+        /// <param name="elements">元素列表</param>
+        /// <returns>哈希值</returns>
+        private int ComputeElementsHash(List<MarkdownElement> elements)
+        {
+            if (elements == null || elements.Count == 0)
+                return 0;
+                
+            unchecked
+            {
+                int hash = 17;
+                for (int i = 0; i < elements.Count; i++)
+                {
+                    hash = hash * 31 + elements[i].GetHashCode();
+                }
+                return hash;
+            }
+        }
+
+        /// <summary>
+        /// 归还分组缓存到对象池
+        /// </summary>
+        private void ReturnGroupsToPool()
+        {
+            if (m_cachedGroups != null)
+            {
+                foreach (var group in m_cachedGroups)
+                {
+                    if (group != null)
+                    {
+                        group.Clear();
+                        g_groupPool.Enqueue(group);
+                    }
+                }
+                m_cachedGroups.Clear();
+                g_groupsPool.Enqueue(m_cachedGroups);
+                m_cachedGroups = null;
+            }
+        }
+
+        /// <summary>
+        /// 优化版的内联元素分组方法，使用对象池
+        /// </summary>
+        /// <param name="elements">元素列表</param>
+        /// <returns>分组后的元素列表</returns>
+        private List<List<MarkdownElement>> GroupInlineElementsOptimized(List<MarkdownElement> elements)
+        {
+            // 从对象池获取 List，避免分配
+            var groups = g_groupsPool.Count > 0 ? g_groupsPool.Dequeue() : new List<List<MarkdownElement>>();
+            groups.Clear();
+            
+            var currentGroup = g_groupPool.Count > 0 ? g_groupPool.Dequeue() : new List<MarkdownElement>();
+            currentGroup.Clear();
+
+            for (var i = 0; i < elements.Count; i++)
+            {
+                MarkdownElement element = elements[i];
+
+                // 如果是硬换行符，结束当前组（但不添加换行符到结果中）
+                if (element.elementType == MarkdownElementType.LineBreak)
+                {
+                    if (currentGroup.Count > 0)
+                    {
+                        groups.Add(currentGroup);
+                        currentGroup = g_groupPool.Count > 0 ? g_groupPool.Dequeue() : new List<MarkdownElement>();
+                        currentGroup.Clear();
+                    }
+
+                    // 不添加硬换行符元素本身，它只用于分组
+                    continue;
+                }
+
+                // 如果是软换行符，加入当前组并继续
+                if (element.elementType == MarkdownElementType.SoftLineBreak)
+                {
+                    currentGroup.Add(element);
+                    continue;
+                }
+
+                // 如果是块级元素，结束当前组
+                if (IsBlockElement(element))
+                {
+                    if (currentGroup.Count > 0)
+                    {
+                        groups.Add(currentGroup);
+                        currentGroup = g_groupPool.Count > 0 ? g_groupPool.Dequeue() : new List<MarkdownElement>();
+                        currentGroup.Clear();
+                    }
+
+                    var singleElementGroup = g_groupPool.Count > 0 ? g_groupPool.Dequeue() : new List<MarkdownElement>();
+                    singleElementGroup.Clear();
+                    singleElementGroup.Add(element);
+                    groups.Add(singleElementGroup);
+                }
+                else
+                {
+                    currentGroup.Add(element);
+                }
+            }
+
+            if (currentGroup.Count > 0)
+            {
+                groups.Add(currentGroup);
+            }
+            else
+            {
+                // 如果当前组为空，归还到对象池
+                currentGroup.Clear();
+                g_groupPool.Enqueue(currentGroup);
+            }
+
+            return groups;
+        }
+
+        /// <summary>
+        /// 将内联元素分组（保留原方法作为备用）
         /// </summary>
         /// <param name="elements">元素列表</param>
         /// <returns>分组后的元素列表</returns>
