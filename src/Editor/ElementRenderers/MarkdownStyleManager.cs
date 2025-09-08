@@ -14,28 +14,11 @@ namespace UniMarkdown.Editor
         private const int g_baseFontSize = 16; // 基准字体大小 fontSize = 16px
 
         private static MarkdownStyleManager g_inst;
-        private static readonly object g_lock = new();
-        public Color BackgroundColor { get; private set; }
-        public Color CodeBackgroundColor { get; private set; }
-        public Color CodeTextColor { get; private set; }
-        public Color HeaderColor { get; private set; }
-        public Color HeaderH6Color { get; private set; }
-        public Color InlineCodeBackgroundColor { get; private set; }
-        public Color InlineCodeTextColor { get; private set; }
-        public Color LinkColor { get; private set; }
-        public Color LinkHoverColor { get; private set; }
         public Color SecondaryTextColor; // 次要文本颜色（用于已完成任务 { get; private set; }
-        public Color TextColor { get; private set; }
-        
-        // 表格相关颜色
-        public Color TableHeaderBackground { get; private set; }
-        public Color TableBorderColor { get; private set; }
-        public Color TableThickBorderColor { get; private set; }
 
         // 基础配置缓存
         private Font m_monoFont;
         private GUILayoutOption[] m_inlineOptions;
-        private GUIStyle m_scrollViewBackgroundStyle;
         private GUIStyle m_boldItalicStyle;
         private GUIStyle m_boldStyle;
         private GUIStyle m_codeBlockStyle;
@@ -47,20 +30,36 @@ namespace UniMarkdown.Editor
         private GUIStyle m_headerStyle5;
         private GUIStyle m_headerStyle6;
         private GUIStyle m_inlineCodeStyle;
+        private GUIStyle m_inlineTextStyle; // 行内文本样式
         private GUIStyle m_italicStyle;
         private GUIStyle m_linkStyle;
         private GUIStyle m_listStyle;
         private GUIStyle m_orderedListBulletStyle;
-        private GUIStyle m_taskCheckboxStyle; // 任务勾选框样式
-        private GUIStyle m_taskContentStyle; // 任务内容样式
-        private GUIStyle m_textStyle;
-        private GUIStyle m_inlineTextStyle; // 行内文本样式
-        private GUIStyle m_unorderedListBulletStyle;
-        
+        private GUIStyle m_scrollViewBackgroundStyle;
+        private GUIStyle m_tableCellStyle; // 表格单元格样式
+
         // 表格相关样式
         private GUIStyle m_tableContainerStyle; // 表格容器样式
         private GUIStyle m_tableHeaderStyle; // 表格表头样式
-        private GUIStyle m_tableCellStyle; // 表格单元格样式
+        private GUIStyle m_taskCheckboxStyle; // 任务勾选框样式
+        private GUIStyle m_taskContentStyle; // 任务内容样式
+        private GUIStyle m_textStyle;
+        private GUIStyle m_unorderedListBulletStyle;
+        public Color BackgroundColor { get; private set; }
+        public Color CodeBackgroundColor { get; private set; }
+        public Color CodeTextColor { get; private set; }
+        public Color HeaderColor { get; private set; }
+        public Color HeaderH6Color { get; private set; }
+        public Color InlineCodeBackgroundColor { get; private set; }
+        public Color InlineCodeTextColor { get; private set; }
+        public Color LinkColor { get; private set; }
+        public Color LinkHoverColor { get; private set; }
+        public Color TextColor { get; private set; }
+
+        // 表格相关颜色
+        public Color TableHeaderBackground { get; private set; }
+        public Color TableBorderColor { get; private set; }
+        public Color TableThickBorderColor { get; private set; }
 
         /// <summary>
         /// 单例实例
@@ -74,9 +73,11 @@ namespace UniMarkdown.Editor
                     return g_inst;
                 }
 
-                lock (g_lock)
+                if (null == g_inst)
                 {
-                    g_inst ??= new MarkdownStyleManager();
+                    g_inst = new MarkdownStyleManager();
+                    EditorApplication.playModeStateChanged -= PlayModeStateChanged;
+                    EditorApplication.playModeStateChanged += PlayModeStateChanged;
                 }
 
                 return g_inst;
@@ -89,6 +90,12 @@ namespace UniMarkdown.Editor
         private MarkdownStyleManager()
         {
             InitializeBaseConfig();
+        }
+
+        public void Dispose()
+        {
+            g_inst = null;
+            EditorApplication.playModeStateChanged -= PlayModeStateChanged;
         }
 
         /// <summary>
@@ -114,7 +121,7 @@ namespace UniMarkdown.Editor
                 LinkColor = new Color(0.267f, 0.576f, 0.973f, 1f); // GitHub链接蓝色 (#4493f8)
                 LinkHoverColor = new Color(0.267f, 0.576f, 0.973f, 1f); // GitHub悬停蓝色 (#4493f8)
                 SecondaryTextColor = new Color(0.7f, 0.7f, 0.7f, 1f); // 已完成任务的次要文本颜色
-                
+
                 // 表格颜色 - Dark Theme
                 TableHeaderBackground = new Color(0.25f, 0.25f, 0.25f, 0.8f);
                 TableBorderColor = new Color(0.4f, 0.4f, 0.4f, 0.6f);
@@ -134,7 +141,7 @@ namespace UniMarkdown.Editor
                 LinkColor = new Color32(9, 105, 218, 255); // GitHub链接蓝色 (#4493f8)
                 LinkHoverColor = new Color32(9, 105, 218, 255); // GitHub链接蓝色 (#4493f8)
                 SecondaryTextColor = new Color(0.5f, 0.5f, 0.5f, 1f); // 已完成任务的次要文本颜色
-                
+
                 // 表格颜色 - Light Theme
                 TableHeaderBackground = new Color(0.95f, 0.95f, 0.95f, 1f);
                 TableBorderColor = new Color(0.7f, 0.7f, 0.7f, 0.8f);
@@ -168,7 +175,7 @@ namespace UniMarkdown.Editor
         /// <summary>
         /// 获取文本样式（已弃用，请使用GetTextStyleForContext）
         /// </summary>
-        [System.Obsolete("请使用GetTextStyleForContext(bool isInMixedContext)以获得更好的换行控制")]
+        [Obsolete("请使用GetTextStyleForContext(bool isInMixedContext)以获得更好的换行控制")]
         public GUIStyle GetTextStyle()
         {
             return GetTextStyleForContext(false);
@@ -185,10 +192,8 @@ namespace UniMarkdown.Editor
             {
                 return GetInlineTextStyle();
             }
-            else
-            {
-                return GetBlockTextStyle();
-            }
+
+            return GetBlockTextStyle();
         }
 
         /// <summary>
@@ -243,26 +248,26 @@ namespace UniMarkdown.Editor
             switch (level)
             {
                 case 1:
-                {
-                    if (m_headerStyle1 == null)
                     {
-                        int fontSize = EmInt(2); // H1: 32px (2em)
-                        m_headerStyle1 = new GUIStyle(EditorStyles.boldLabel)
+                        if (m_headerStyle1 == null)
                         {
-                            fontSize = fontSize,
-                            font = m_monoFont,
-                            normal = { textColor = HeaderColor },
-                            hover = { textColor = HeaderColor },
-                            padding = new RectOffset(0, 0, 0, 0),
-                            margin = new RectOffset(0, 0, 0, EmInt(0.3f, fontSize)),
-                            alignment = TextAnchor.LowerLeft,
-                            stretchHeight = false,
-                            wordWrap = true
-                        };
-                    }
+                            int fontSize = EmInt(2); // H1: 32px (2em)
+                            m_headerStyle1 = new GUIStyle(EditorStyles.boldLabel)
+                            {
+                                fontSize = fontSize,
+                                font = m_monoFont,
+                                normal = { textColor = HeaderColor },
+                                hover = { textColor = HeaderColor },
+                                padding = new RectOffset(0, 0, 0, 0),
+                                margin = new RectOffset(0, 0, 0, EmInt(0.3f, fontSize)),
+                                alignment = TextAnchor.LowerLeft,
+                                stretchHeight = false,
+                                wordWrap = true
+                            };
+                        }
 
-                    return m_headerStyle1;
-                }
+                        return m_headerStyle1;
+                    }
                 case 2:
                     if (m_headerStyle2 == null)
                     {
@@ -588,7 +593,7 @@ namespace UniMarkdown.Editor
 
         public int EmInt(float value, float baseFontSize = g_baseFontSize)
         {
-            return (int) Em(value, baseFontSize);
+            return (int)Em(value, baseFontSize);
         }
 
         public float Em(float value, float baseFontSize = g_baseFontSize)
@@ -687,7 +692,7 @@ namespace UniMarkdown.Editor
                 m_tableContainerStyle = new GUIStyle
                 {
                     padding = new RectOffset(0, 0, EmInt(0.3f), EmInt(0.3f)), // 使用合理的容器内边距
-                    margin = new RectOffset(0, 0, EmInt(0.3f), EmInt(0.3f))   // 使用合理的容器外边距
+                    margin = new RectOffset(0, 0, EmInt(0.3f), EmInt(0.3f)) // 使用合理的容器外边距
                     // 移除背景色，避免影响布局
                 };
             }
@@ -709,7 +714,8 @@ namespace UniMarkdown.Editor
                     fontStyle = FontStyle.Bold,
                     font = EditorStyles.label.font, // 确保使用正确的字体
                     alignment = TextAnchor.MiddleLeft,
-                    padding = new RectOffset(EmInt(0.75f), EmInt(0.75f), EmInt(0.5f), EmInt(0.5f)), // 修复padding大小
+                    padding
+                        = new RectOffset(EmInt(0.75f), EmInt(0.75f), EmInt(0.5f), EmInt(0.5f)), // 修复padding大小
                     margin = new RectOffset(0, 0, 0, 0),
                     wordWrap = false,
                     normal = { textColor = HeaderColor },
@@ -733,7 +739,8 @@ namespace UniMarkdown.Editor
                     fontSize = EmInt(0.875f), // 单元格使用0.875em = 14px
                     font = EditorStyles.label.font, // 确保使用正确的字体
                     alignment = TextAnchor.MiddleLeft,
-                    padding = new RectOffset(EmInt(0.75f), EmInt(0.75f), EmInt(0.5f), EmInt(0.5f)), // 修复padding大小
+                    padding
+                        = new RectOffset(EmInt(0.75f), EmInt(0.75f), EmInt(0.5f), EmInt(0.5f)), // 修复padding大小
                     margin = new RectOffset(0, 0, 0, 0),
                     wordWrap = false,
                     normal = { textColor = TextColor },
@@ -742,6 +749,16 @@ namespace UniMarkdown.Editor
             }
 
             return m_tableCellStyle;
+        }
+
+        private static void PlayModeStateChanged(PlayModeStateChange state)
+        {
+            switch (state)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                    Inst.Dispose();
+                    break;
+            }
         }
     }
 }
