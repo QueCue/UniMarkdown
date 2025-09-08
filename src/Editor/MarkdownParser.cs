@@ -56,6 +56,9 @@ namespace UniMarkdown.Editor
         private static readonly Regex g_unorderedListRegex = new Regex(@"^(\s*)[-\*\+]\s+(.+)$",
             RegexOptions.Multiline | RegexOptions.Compiled);
 
+        // 跟踪当前列表的缩进模式
+        private static int s_currentListIndentUnit = 0;  // 0=未确定, 2=2空格模式, 4=4空格模式
+
         private static readonly Regex g_orderedListRegex
             = new Regex(@"^(\s*)\d+\.\s+(.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
 
@@ -155,6 +158,9 @@ namespace UniMarkdown.Editor
         /// <param name="result">结果列表</param>
         private static void ParseMarkdownInternal(string markdownText, List<MarkdownElement> result)
         {
+            // 重置列表缩进模式检测
+            s_currentListIndentUnit = 0;
+            
             // 按行分割文本 - 使用RemoveEmptyEntries避免空行导致的问题
             string[] lines = markdownText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             var inCodeBlock = false;
@@ -419,8 +425,33 @@ namespace UniMarkdown.Editor
             Match match = g_unorderedListRegex.Match(line);
             if (match.Success)
             {
-                // 计算嵌套层级（每4个空格为一级）
                 string indentation = match.Groups[1].Value;
+                string normalized = indentation.Replace("\t", "    ");
+                
+                // 如果是无缩进的列表项（新列表开始），重置缩进模式
+                if (normalized.Length == 0)
+                {
+                    s_currentListIndentUnit = 0;
+                }
+                
+                // 检测列表的缩进模式：如果是第一个有缩进的行，确定缩进单位
+                if (s_currentListIndentUnit == 0 && normalized.Length > 0)
+                {
+                    if (normalized.Length == 2)
+                    {
+                        s_currentListIndentUnit = 2;  // 2空格模式
+                    }
+                    else if (normalized.Length == 4)
+                    {
+                        s_currentListIndentUnit = 4;  // 4空格模式
+                    }
+                    else
+                    {
+                        // 其他情况默认2空格模式
+                        s_currentListIndentUnit = 2;
+                    }
+                }
+                
                 nestingLevel = CalculateNestingLevel(indentation);
                 listText = match.Groups[2].Value.Trim();
                 return true;
@@ -506,9 +537,27 @@ namespace UniMarkdown.Editor
         /// <returns>嵌套层级（0为顶级）</returns>
         private static int CalculateNestingLevel(string indentation)
         {
-            // 将Tab转换为4个空格，然后计算层级
+            // 将Tab转换为空格
             string normalized = indentation.Replace("\t", "    ");
-            return normalized.Length / 4;
+            
+            if (normalized.Length == 0) return 0;
+            
+            // 根据检测到的缩进模式计算层级
+            if (s_currentListIndentUnit == 2)
+            {
+                // 2空格模式：每2个空格一级
+                return normalized.Length / 2;
+            }
+            else if (s_currentListIndentUnit == 4)
+            {
+                // 4空格模式：每4个空格一级
+                return normalized.Length / 4;
+            }
+            else
+            {
+                // 未确定模式，默认2空格
+                return normalized.Length / 2;
+            }
         }
 
         /// <summary>
